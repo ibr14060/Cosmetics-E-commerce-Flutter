@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "893206265578",
+    "firebase_url": "https://mobileproject12-d6fad-default-rtdb.firebaseio.com",
+    "project_id": "mobileproject12-d6fad",
+    "storage_bucket": "mobileproject12-d6fad.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:893206265578:android:a1ebe964fd618f068fe193",
+        "android_client_info": {
+          "package_name": "com.example.cosmetics_project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyATJmaerdU7lQuNsPyp-a5Tl0cAteF8FSQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
