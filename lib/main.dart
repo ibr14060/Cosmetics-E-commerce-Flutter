@@ -28,7 +28,10 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => LoginScreen(),
         '/LoginScreen': (context) => LoginScreen(),
-        '/HomePage': (context) => HomePage(),
+        '/HomePage': (dummyCtx) => HomePage(
+              title: 'Home Page',
+              username: '_usernameController',
+            ),
       },
     );
   }

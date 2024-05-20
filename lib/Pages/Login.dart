@@ -24,6 +24,8 @@ class _LoginScreenState extends State<LoginScreenApp> {
   bool isLogin = true;
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+  TextEditingController _firstNameController = TextEditingController();
+  TextEditingController _lastNameController = TextEditingController();
 
   Future<bool> signInWithEmailAndPassword() async {
     try {
@@ -53,6 +55,7 @@ class _LoginScreenState extends State<LoginScreenApp> {
     try {
       await Auth().createUserWithEmailAndPassword(
           email: _usernameController.text, password: _passwordController.text);
+      // Optionally, you can use _firstNameController.text and _lastNameController.text here
       return true;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
@@ -114,6 +117,8 @@ class _LoginScreenState extends State<LoginScreenApp> {
   void dispose() {
     _usernameController.dispose();
     _passwordController.dispose();
+    _firstNameController.dispose();
+    _lastNameController.dispose();
     super.dispose();
   }
 
@@ -124,6 +129,24 @@ class _LoginScreenState extends State<LoginScreenApp> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          if (!isLogin) ...[
+            TextField(
+              controller: _firstNameController,
+              decoration: InputDecoration(
+                labelText: 'First Name',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 16.0),
+            TextField(
+              controller: _lastNameController,
+              decoration: InputDecoration(
+                labelText: 'Last Name',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 16.0),
+          ],
           TextField(
             controller: _usernameController,
             decoration: InputDecoration(
