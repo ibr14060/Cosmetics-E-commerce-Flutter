@@ -4,43 +4,55 @@ import 'package:cosmetics_project/auth.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({Key? key}) : super(key: key);
-  final User? user = Auth().currentUser;
-  Future<void> signOut() async {
-    await Auth().signOut();
-  }
-
-  Widget _title() {
-    return Text('Welcome ${user!.email}');
-  }
-
-  Widget _logoutButton() {
-    return ElevatedButton(
-      onPressed: () {
-        signOut();
-      },
-      child: Text('Logout'),
-    );
-  }
-
-  Widget _userID() {
-    return Text('User ID: ${user!.uid}');
-  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: _title(),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            _userID(),
-            _logoutButton(),
-          ],
-        ),
-      ),
+    return FutureBuilder<User?>(
+      future: Future<User?>.value(Auth().currentUser),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text('Loading...'),
+            ),
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        } else {
+          if (snapshot.hasError || snapshot.data == null) {
+            return Scaffold(
+              appBar: AppBar(
+                title: Text('Error'),
+              ),
+              body: Center(
+                child: Text('Error: User not found'),
+              ),
+            );
+          } else {
+            final User user = snapshot.data!;
+            return Scaffold(
+              appBar: AppBar(
+                title: Text('Welcome ${user.email}'),
+              ),
+              body: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text('User ID: ${user.uid}'),
+                    ElevatedButton(
+                      onPressed: () {
+                        Auth().signOut();
+                      },
+                      child: Text('Logout'),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
+        }
+      },
     );
   }
 }

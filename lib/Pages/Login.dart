@@ -1,6 +1,4 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cosmetics_project/auth.dart';
 
@@ -11,23 +9,23 @@ class LoginScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('Login Page'),
       ),
-      body: LoginScreenapp(),
+      body: LoginScreenApp(),
     );
   }
 }
 
-class LoginScreenapp extends StatefulWidget {
+class LoginScreenApp extends StatefulWidget {
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreenapp> {
+class _LoginScreenState extends State<LoginScreenApp> {
   String? error = '';
   bool isLogin = true;
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
-  Future signInWithEmailAndPassword() async {
+  Future<bool> signInWithEmailAndPassword() async {
     try {
       await Auth().signInWithEmailAndPassword(
           email: _usernameController.text, password: _passwordController.text);
@@ -35,10 +33,22 @@ class _LoginScreenState extends State<LoginScreenapp> {
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         print('No user found for that email.');
+        setState(() {
+          error = 'No user found for that email.';
+        });
       } else if (e.code == 'wrong-password') {
         print('Wrong password provided for that user.');
+        setState(() {
+          error = 'Wrong password provided for that user.';
+        });
       }
-      return null;
+      return false;
+    } catch (e) {
+      print(e);
+      setState(() {
+        error = 'An unknown error occurred.';
+      });
+      return false;
     }
   }
 
@@ -49,13 +59,20 @@ class _LoginScreenState extends State<LoginScreenapp> {
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         print('The password provided is too weak.');
+        setState(() {
+          error = 'The password provided is too weak.';
+        });
       } else if (e.code == 'email-already-in-use') {
         print('The account already exists for that email.');
+        setState(() {
+          error = 'The account already exists for that email.';
+        });
       }
-      return null;
     } catch (e) {
       print(e);
-      return null;
+      setState(() {
+        error = 'An unknown error occurred.';
+      });
     }
   }
 
@@ -63,30 +80,14 @@ class _LoginScreenState extends State<LoginScreenapp> {
     bool isAuthenticated = await signInWithEmailAndPassword();
 
     if (isAuthenticated) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Success'),
-            content: Text('Login successful'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
+      Navigator.pushReplacementNamed(context, '/HomePage');
     } else {
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text('Error'),
-            content: Text('Username or password is incorrect'),
+            content: Text(error ?? 'Username or password is incorrect'),
             actions: [
               TextButton(
                 onPressed: () {
@@ -113,33 +114,28 @@ class _LoginScreenState extends State<LoginScreenapp> {
     return Padding(
       padding: EdgeInsets.all(16.0),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           TextField(
             controller: _usernameController,
             decoration: InputDecoration(
               labelText: 'Username',
+              border: OutlineInputBorder(),
             ),
           ),
           SizedBox(height: 16.0),
           TextField(
             controller: _passwordController,
-            obscureText: true,
             decoration: InputDecoration(
               labelText: 'Password',
+              border: OutlineInputBorder(),
             ),
+            obscureText: true,
           ),
           SizedBox(height: 16.0),
           ElevatedButton(
             onPressed: _login,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.login),
-                SizedBox(width: 8.0),
-                Text('Log In'),
-              ],
-            ),
+            child: Text('Login'),
           ),
         ],
       ),
