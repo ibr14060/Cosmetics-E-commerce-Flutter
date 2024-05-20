@@ -32,19 +32,16 @@ class _LoginScreenState extends State<LoginScreenApp> {
       return true;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        print('No user found for that email.');
         setState(() {
           error = 'No user found for that email.';
         });
       } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
         setState(() {
           error = 'Wrong password provided for that user.';
         });
       }
       return false;
     } catch (e) {
-      print(e);
       setState(() {
         error = 'An unknown error occurred.';
       });
@@ -52,34 +49,39 @@ class _LoginScreenState extends State<LoginScreenApp> {
     }
   }
 
-  Future<void> createUserWithEmailAndPassword() async {
+  Future<bool> createUserWithEmailAndPassword() async {
     try {
       await Auth().createUserWithEmailAndPassword(
           email: _usernameController.text, password: _passwordController.text);
+      return true;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
         setState(() {
           error = 'The password provided is too weak.';
         });
       } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
         setState(() {
           error = 'The account already exists for that email.';
         });
       }
+      return false;
     } catch (e) {
-      print(e);
       setState(() {
         error = 'An unknown error occurred.';
       });
+      return false;
     }
   }
 
-  void _login() async {
-    bool isAuthenticated = await signInWithEmailAndPassword();
+  void _loginOrSignup() async {
+    bool isSuccess;
+    if (isLogin) {
+      isSuccess = await signInWithEmailAndPassword();
+    } else {
+      isSuccess = await createUserWithEmailAndPassword();
+    }
 
-    if (isAuthenticated) {
+    if (isSuccess) {
       Navigator.pushReplacementNamed(context, '/HomePage');
     } else {
       showDialog(
@@ -87,7 +89,7 @@ class _LoginScreenState extends State<LoginScreenApp> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text('Error'),
-            content: Text(error ?? 'Username or password is incorrect'),
+            content: Text(error ?? 'An error occurred'),
             actions: [
               TextButton(
                 onPressed: () {
@@ -100,6 +102,12 @@ class _LoginScreenState extends State<LoginScreenApp> {
         },
       );
     }
+  }
+
+  void toggleFormMode() {
+    setState(() {
+      isLogin = !isLogin;
+    });
   }
 
   @override
@@ -119,7 +127,7 @@ class _LoginScreenState extends State<LoginScreenApp> {
           TextField(
             controller: _usernameController,
             decoration: InputDecoration(
-              labelText: 'Username',
+              labelText: 'Email',
               border: OutlineInputBorder(),
             ),
           ),
@@ -134,8 +142,14 @@ class _LoginScreenState extends State<LoginScreenApp> {
           ),
           SizedBox(height: 16.0),
           ElevatedButton(
-            onPressed: _login,
-            child: Text('Login'),
+            onPressed: _loginOrSignup,
+            child: Text(isLogin ? 'Login' : 'Sign Up'),
+          ),
+          TextButton(
+            onPressed: toggleFormMode,
+            child: Text(isLogin
+                ? 'Don\'t have an account? Sign Up'
+                : 'Have an account? Login'),
           ),
         ],
       ),

@@ -43,6 +43,7 @@ class HomePage extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () {
                         Auth().signOut();
+                        Navigator.pushReplacementNamed(context, '/LoginScreen');
                       },
                       child: Text('Logout'),
                     ),
