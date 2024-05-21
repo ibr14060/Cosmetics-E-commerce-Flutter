@@ -569,10 +569,4 @@ class HomePageState extends State<HomePage> {
       },
     );
   }
-
-  @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    throw UnimplementedError();
-  }
 }

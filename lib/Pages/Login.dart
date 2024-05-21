@@ -26,6 +26,8 @@ class _LoginScreenState extends State<LoginScreenApp> {
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _firstNameController = TextEditingController();
   TextEditingController _lastNameController = TextEditingController();
+  TextEditingController _mobileController = TextEditingController();
+  TextEditingController _addressController = TextEditingController();
 
   Future<bool> signInWithEmailAndPassword() async {
     try {
@@ -54,8 +56,13 @@ class _LoginScreenState extends State<LoginScreenApp> {
   Future<bool> createUserWithEmailAndPassword() async {
     try {
       await Auth().createUserWithEmailAndPassword(
-          email: _usernameController.text, password: _passwordController.text);
-      // Optionally, you can use _firstNameController.text and _lastNameController.text here
+        email: _usernameController.text,
+        password: _passwordController.text,
+        mobileNumber: _mobileController.text,
+        address: _addressController.text,
+        firstName: _firstNameController.text,
+        lastName: _lastNameController.text,
+      );
       return true;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
@@ -119,6 +126,8 @@ class _LoginScreenState extends State<LoginScreenApp> {
     _passwordController.dispose();
     _firstNameController.dispose();
     _lastNameController.dispose();
+    _mobileController.dispose();
+    _addressController.dispose();
     super.dispose();
   }
 
@@ -126,55 +135,73 @@ class _LoginScreenState extends State<LoginScreenApp> {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(16.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          if (!isLogin) ...[
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (!isLogin) ...[
+              TextField(
+                controller: _firstNameController,
+                decoration: InputDecoration(
+                  labelText: 'First Name',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              SizedBox(height: 16.0),
+              TextField(
+                controller: _lastNameController,
+                decoration: InputDecoration(
+                  labelText: 'Last Name',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              SizedBox(height: 16.0),
+              TextField(
+                controller: _mobileController,
+                decoration: InputDecoration(
+                  labelText: 'Mobile Number (Optional)',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              SizedBox(height: 16.0),
+              TextField(
+                controller: _addressController,
+                decoration: InputDecoration(
+                  labelText: 'Address',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              SizedBox(height: 16.0),
+            ],
             TextField(
-              controller: _firstNameController,
+              controller: _usernameController,
               decoration: InputDecoration(
-                labelText: 'First Name',
+                labelText: 'Email',
                 border: OutlineInputBorder(),
               ),
             ),
             SizedBox(height: 16.0),
             TextField(
-              controller: _lastNameController,
+              controller: _passwordController,
               decoration: InputDecoration(
-                labelText: 'Last Name',
+                labelText: 'Password',
                 border: OutlineInputBorder(),
               ),
+              obscureText: true,
             ),
             SizedBox(height: 16.0),
+            ElevatedButton(
+              onPressed: _loginOrSignup,
+              child: Text(isLogin ? 'Login' : 'Sign Up'),
+            ),
+            TextButton(
+              onPressed: toggleFormMode,
+              child: Text(isLogin
+                  ? 'Don\'t have an account? Sign Up'
+                  : 'Have an account? Login'),
+            ),
           ],
-          TextField(
-            controller: _usernameController,
-            decoration: InputDecoration(
-              labelText: 'Email',
-              border: OutlineInputBorder(),
-            ),
-          ),
-          SizedBox(height: 16.0),
-          TextField(
-            controller: _passwordController,
-            decoration: InputDecoration(
-              labelText: 'Password',
-              border: OutlineInputBorder(),
-            ),
-            obscureText: true,
-          ),
-          SizedBox(height: 16.0),
-          ElevatedButton(
-            onPressed: _loginOrSignup,
-            child: Text(isLogin ? 'Login' : 'Sign Up'),
-          ),
-          TextButton(
-            onPressed: toggleFormMode,
-            child: Text(isLogin
-                ? 'Don\'t have an account? Sign Up'
-                : 'Have an account? Login'),
-          ),
-        ],
+        ),
       ),
     );
   }
