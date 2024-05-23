@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cosmetics_project/Pages/Login.dart';
 import 'Pages/Home_Page.dart';
+import 'Pages/Comments.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,6 +33,11 @@ class MyApp extends StatelessWidget {
               title: 'Home Page',
               username: '_usernameController',
             ),
+        '/CommentPage': (dummyCtx) => Comments(
+              title: 'Comment Page',
+              postName: 'post1',
+              username: '_usernameController',
+            )
       },
     );
   }

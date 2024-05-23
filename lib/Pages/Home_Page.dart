@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:cosmetics_project/Pages/Comments.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:cosmetics_project/auth.dart';
 import 'package:http/http.dart' as http;
 import 'package:cupertino_icons/cupertino_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:line_icons/line_icons.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key, required this.title, required this.username})
@@ -554,18 +556,18 @@ class HomePageState extends State<HomePage> {
                                       ElevatedButton.icon(
                                         onPressed: () {
                                           print(post['id']);
-/*
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => CommentPage(
-                                            title: 'Comment Page',
-                                            postName: post['name'],
-                                            username: widget
-                                                .username, // Pass the post['name'] as an attribute
-                                          )),
-                                );
-*/
+
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => Comments(
+                                                      title: 'Comment Page',
+                                                      postName: post['id'],
+                                                      username: user
+                                                          .email!, // Pass the post['name'] as an attribute
+                                                    )),
+                                          );
+
                                           // Handle the comment button click
                                           print('Comment button clicked');
                                         },
