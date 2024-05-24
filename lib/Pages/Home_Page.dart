@@ -484,10 +484,6 @@ class HomePageState extends State<HomePage> {
                                   const SizedBox(width: 8.0),
                                   Row(
                                     children: [
-                                      IconButton(
-                                        icon: Icon(Icons.person_2),
-                                        onPressed: toggleLike,
-                                      ),
                                       Flexible(
                                         child: Text(
                                           'UserName',
@@ -497,6 +493,7 @@ class HomePageState extends State<HomePage> {
                                           ),
                                         ),
                                       ),
+
                                       Text(
                                         ' :',
                                         style: TextStyle(
@@ -504,6 +501,7 @@ class HomePageState extends State<HomePage> {
                                           fontWeight: FontWeight.normal,
                                         ),
                                       ),
+
                                       // const SizedBox(width: 8.0),
                                       Flexible(
                                         child: Text(
@@ -513,6 +511,23 @@ class HomePageState extends State<HomePage> {
                                             fontWeight: FontWeight.normal,
                                           ),
                                         ),
+                                      ),
+                                      SizedBox(width: 19.0),
+                                      Text(
+                                        ' ',
+                                        style: TextStyle(
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                      ),
+                                      IconButton(
+                                        icon: Icon(
+                                          isLiked
+                                              ? Icons.favorite
+                                              : Icons.favorite_border,
+                                          color: Colors.red,
+                                        ),
+                                        onPressed: toggleLike,
                                       ),
                                     ],
                                   ),
