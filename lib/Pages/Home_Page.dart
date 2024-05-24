@@ -169,7 +169,63 @@ class HomePageState extends State<HomePage> {
   }
 
   bool isLiked = false;
-  void toggleLike() {
+  void toggleLike(String productId, String userEmail) async {
+    try {
+      final response = await http.get(Uri.parse(
+          'https://mobileproject12-d6fad-default-rtdb.firebaseio.com/FavItems.json'));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> favData = json.decode(response.body);
+
+        String userKey = '';
+        Map<String, dynamic>? userFavItems;
+
+        // Find the user by email
+        favData.forEach((key, value) {
+          if (value['email'] == userEmail) {
+            userKey = key;
+            userFavItems = value['Products'];
+          }
+        });
+
+        if (userKey.isNotEmpty) {
+          // Check if the product is already in the favorites
+          if (userFavItems != null && userFavItems!.containsKey(productId)) {
+            // Remove the product from favorites
+            userFavItems!.remove(productId);
+          } else {
+            // Add the product to favorites
+            userFavItems ??= {};
+            userFavItems![productId] = {
+              'id': productId
+            }; // You can add additional data if needed
+          }
+
+          // Update the user's favorite items in the database
+          final updateResponse = await http.patch(
+            Uri.parse(
+                'https://mobileproject12-d6fad-default-rtdb.firebaseio.com/FavItems/$userKey.json'),
+            body: json.encode({
+              'Products': userFavItems,
+            }),
+          );
+
+          if (updateResponse.statusCode == 200) {
+            print('Favorite items updated successfully');
+          } else {
+            print(
+                'Failed to update favorite items: ${updateResponse.statusCode}');
+          }
+        } else {
+          print('User not found');
+        }
+      } else {
+        print('Failed to fetch favorite items: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error fetching favorite items: $error');
+    }
+
     setState(() {
       isLiked = !isLiked;
     });
@@ -525,14 +581,16 @@ class HomePageState extends State<HomePage> {
                                           ),
                                         ),
                                         IconButton(
-                                          icon: Icon(
-                                            isLiked
-                                                ? Icons.favorite
-                                                : Icons.favorite_border,
-                                            color: Colors.red,
-                                          ),
-                                          onPressed: toggleLike,
-                                        ),
+                                            icon: Icon(
+                                              isLiked
+                                                  ? Icons.favorite
+                                                  : Icons.favorite_border,
+                                              color: Colors.red,
+                                            ),
+                                            onPressed: () {
+                                              toggleLike(
+                                                  post['id'], user.email!);
+                                            }),
                                       ],
                                     ),
                                     Row(children: [
