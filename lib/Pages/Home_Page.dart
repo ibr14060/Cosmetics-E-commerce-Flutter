@@ -303,243 +303,247 @@ class HomePageState extends State<HomePage> {
           } else {
             final User user = snapshot.data!;
             return Scaffold(
-              appBar: AppBar(
-                actions: [
-                  IconButton(
-                    onPressed: () {
-                      setState(() {
-                        isSearchFocused = true;
-                      });
-                    },
-                    icon: const Icon(Icons.search),
-                  ),
-                ],
-                backgroundColor: Colors.blue,
-                title: isSearchFocused
-                    ? TextField(
-                        onChanged: (value) {
-                          setState(() {
-                            searchText = value;
-                          });
-                        },
-                        onSubmitted: (value) {
-                          fetchPostsofsearch(value);
-                        },
-                        decoration: InputDecoration(
-                          hintText: 'Search',
-                          border: InputBorder.none,
-                        ),
-                      )
-                    : Text(widget.title),
-              ),
-              body: Container(
-                color: Color(0xFFFFCCC1),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 120,
-                      child: Column(
-                        children: [
-                          Container(
-                            color: Colors.grey[200], // Background color
-                            padding: EdgeInsets.all(16.0),
-                            child: Center(
-                              child: Text(
-                                'Glam & Beauty', // Your title text
-                                style: TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
+                appBar: AppBar(
+                  actions: [
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          isSearchFocused = true;
+                        });
+                      },
+                      icon: const Icon(Icons.search),
+                    ),
+                  ],
+                  backgroundColor: Colors.blue,
+                  title: isSearchFocused
+                      ? TextField(
+                          onChanged: (value) {
+                            setState(() {
+                              searchText = value;
+                            });
+                          },
+                          onSubmitted: (value) {
+                            fetchPostsofsearch(value);
+                          },
+                          decoration: InputDecoration(
+                            hintText: 'Search',
+                            border: InputBorder.none,
+                          ),
+                        )
+                      : Text(widget.title),
+                ),
+                body: Container(
+                  color: Color(0xFFFFCCC1),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 120,
+                        child: Column(
+                          children: [
+                            Container(
+                              color: Colors.grey[200], // Background color
+                              padding: EdgeInsets.all(16.0),
+                              child: Center(
+                                child: Text(
+                                  'Glam & Beauty', // Your title text
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          Expanded(
-                            child: Container(
-                              color: Colors.grey[200], // Background color
-                              child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: buttonData.length,
-                                itemBuilder: (context, index) {
-                                  final button = buttonData[index];
-                                  final isLastButton =
-                                      index == buttonData.length - 1;
-                                  return Container(
-                                    margin: EdgeInsets.only(
-                                        top: 8.0,
-                                        bottom: 8.0,
-                                        left: 8.0,
-                                        right: isLastButton ? 8.0 : 0.0),
-                                    color: isLastButton
-                                        ? Colors.grey[200]
-                                        : null, // Space between buttons
-                                    child: ElevatedButton.icon(
-                                      onPressed: () {
-                                        button['onPressed']();
-                                      },
-                                      icon: Icon(button['icon']),
-                                      label: Text(button['name']),
-                                      style: ElevatedButton.styleFrom(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(11.0),
+                            Expanded(
+                              child: Container(
+                                color: Colors.grey[200], // Background color
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: buttonData.length,
+                                  itemBuilder: (context, index) {
+                                    final button = buttonData[index];
+                                    final isLastButton =
+                                        index == buttonData.length - 1;
+                                    return Container(
+                                      margin: EdgeInsets.only(
+                                          top: 8.0,
+                                          bottom: 8.0,
+                                          left: 8.0,
+                                          right: isLastButton ? 8.0 : 0.0),
+                                      color: isLastButton
+                                          ? Colors.grey[200]
+                                          : null, // Space between buttons
+                                      child: ElevatedButton.icon(
+                                        onPressed: () {
+                                          button['onPressed']();
+                                        },
+                                        icon: Icon(button['icon']),
+                                        label: Text(button['name']),
+                                        style: ElevatedButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(11.0),
+                                          ),
+                                          backgroundColor: Colors.grey[200],
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 8.0,
+                                              vertical:
+                                                  4.0), // Adjust the padding // Button background color
                                         ),
-                                        backgroundColor: Colors.grey[200],
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 8.0,
-                                            vertical:
-                                                4.0), // Adjust the padding // Button background color
                                       ),
-                                    ),
-                                  );
-                                },
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Text(
+                        ' ',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(12.0),
+                            child: Text(
+                              'Sort by ',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
+
+                          // SizedBox(height: 16),
                         ],
                       ),
-                    ),
-                    Text(
-                      ' ',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.all(12.0),
-                          child: Text(
-                            'Sort by ',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
+                      SizedBox(
+                        height: 54,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: SortData.length,
+                          itemBuilder: (context, index) {
+                            final button = SortData[index];
 
-                        // SizedBox(height: 16),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 54,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: SortData.length,
-                        itemBuilder: (context, index) {
-                          final button = SortData[index];
-
-                          return Container(
-                            margin: EdgeInsets.symmetric(horizontal: 8.0),
-                            child: ElevatedButton.icon(
-                              onPressed: () {
-                                //button['onPressed']
-                                if (button['name'] == "Alphabetical(A -> Z)") {
-                                  sortPostsByName();
-                                } else if (button['name'] == "Time(Latest)") {
-                                  sortPostsByTimeStamp();
-                                } else {
-                                  sortPostsByRating();
-                                }
-                              },
-                              icon: Icon(button['icon']),
-                              label: Text(button['name']),
-                              style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16.0),
-                                ),
-                                padding: EdgeInsets.all(12.0),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    SizedBox(height: 6),
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: ProductsData.length,
-                        itemBuilder: (context, index) {
-                          final post = ProductsData[index];
-                          //     final useer = usersData[ProductsData.length];
-
-                          return Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
-                              side: BorderSide(
-                                color: Color(
-                                    0xFFEDE8E8), // Setting background color
-                                width: 1.0,
-                              ),
-                            ),
-                            elevation: 2,
-                            margin: EdgeInsets.symmetric(
-                                vertical: 8.0, horizontal: 16.0),
-                            child: Padding(
-                              padding: EdgeInsets.all(16.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const SizedBox(width: 8.0),
-                                  Row(
-                                    children: [
-                                      Flexible(
-                                        child: Text(
-                                          'UserName',
-                                          style: TextStyle(
-                                            fontSize: 17,
-                                            fontWeight: FontWeight.normal,
-                                          ),
-                                        ),
-                                      ),
-
-                                      Text(
-                                        ' :',
-                                        style: TextStyle(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.normal,
-                                        ),
-                                      ),
-
-                                      // const SizedBox(width: 8.0),
-                                      Flexible(
-                                        child: Text(
-                                          post['ProductName'],
-                                          style: TextStyle(
-                                            fontSize: 17,
-                                            fontWeight: FontWeight.normal,
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(width: 19.0),
-                                      Text(
-                                        ' ',
-                                        style: TextStyle(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.normal,
-                                        ),
-                                      ),
-                                      IconButton(
-                                        icon: Icon(
-                                          isLiked
-                                              ? Icons.favorite
-                                              : Icons.favorite_border,
-                                          color: Colors.red,
-                                        ),
-                                        onPressed: toggleLike,
-                                      ),
-                                    ],
+                            return Container(
+                              margin: EdgeInsets.symmetric(horizontal: 8.0),
+                              child: ElevatedButton.icon(
+                                onPressed: () {
+                                  //button['onPressed']
+                                  if (button['name'] ==
+                                      "Alphabetical(A -> Z)") {
+                                    sortPostsByName();
+                                  } else if (button['name'] == "Time(Latest)") {
+                                    sortPostsByTimeStamp();
+                                  } else {
+                                    sortPostsByRating();
+                                  }
+                                },
+                                icon: Icon(button['icon']),
+                                label: Text(button['name']),
+                                style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16.0),
                                   ),
-                                  Row(children: [
-                                    // SizedBox(width: 16.0),
-                                    Text(
-                                      post['ProductName'],
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                  padding: EdgeInsets.all(12.0),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      SizedBox(height: 6),
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: ProductsData.length,
+                          itemBuilder: (context, index) {
+                            final post = ProductsData[index];
+                            //     final useer = usersData[ProductsData.length];
+
+                            return Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                                side: BorderSide(
+                                  color: Color(
+                                      0xFFEDE8E8), // Setting background color
+                                  width: 1.0,
+                                ),
+                              ),
+                              elevation: 2,
+                              margin: EdgeInsets.only(
+                                  top: 8.0,
+                                  left: 16.0,
+                                  right: 16.0,
+                                  bottom: 40.0), // Adjusted margin
+                              child: Padding(
+                                padding: EdgeInsets.all(16.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const SizedBox(width: 8.0),
+                                    Row(
+                                      children: [
+                                        Flexible(
+                                          child: Text(
+                                            'UserName',
+                                            style: TextStyle(
+                                              fontSize: 17,
+                                              fontWeight: FontWeight.normal,
+                                            ),
+                                          ),
+                                        ),
+
+                                        Text(
+                                          ' :',
+                                          style: TextStyle(
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.normal,
+                                          ),
+                                        ),
+
+                                        // const SizedBox(width: 8.0),
+                                        Flexible(
+                                          child: Text(
+                                            post['ProductName'],
+                                            style: TextStyle(
+                                              fontSize: 17,
+                                              fontWeight: FontWeight.normal,
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(width: 19.0),
+                                        Text(
+                                          ' ',
+                                          style: TextStyle(
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.normal,
+                                          ),
+                                        ),
+                                        IconButton(
+                                          icon: Icon(
+                                            isLiked
+                                                ? Icons.favorite
+                                                : Icons.favorite_border,
+                                            color: Colors.red,
+                                          ),
+                                          onPressed: toggleLike,
+                                        ),
+                                      ],
                                     ),
+                                    Row(children: [
+                                      // SizedBox(width: 16.0),
+                                      Text(
+                                        post['ProductName'],
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
 /*
                           SizedBox(width: 16.0),
                           IconButton(
@@ -551,119 +555,146 @@ class HomePageState extends State<HomePage> {
                             onPressed: toggleLike,
                           ),
                           */
-                                  ]),
-                                  SizedBox(height: 8),
-                                  Text(
-                                    'Price: ${post['ProductPrice']}',
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                  SizedBox(height: 8),
-                                  Row(
-                                    children: [
-                                      Icon(Icons.location_on, size: 16),
-                                      SizedBox(width: 4),
-                                      Flexible(
-                                        child: Text(
-                                          'Vendor: ${post['ProductVendor']}',
-                                          style: TextStyle(fontSize: 16),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 8),
-                                  Text(
-                                    'Rating: ${post['ProductRating']}',
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                  SizedBox(height: 16),
-                                  Container(
-                                    height: 200,
-                                    width: double.infinity,
-                                    child: Image.memory(
-                                      base64Decode(post['ProductImage']),
-                                      fit: BoxFit.cover,
+                                    ]),
+                                    SizedBox(height: 8),
+                                    Text(
+                                      'Price: ${post['ProductPrice']}',
+                                      style: TextStyle(fontSize: 16),
                                     ),
-                                  ),
-                                  SizedBox(height: 16),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      RatingBar.builder(
-                                        initialRating:
-                                            post['ProductRating'].toDouble(),
-                                        minRating: 1,
-                                        direction: Axis.horizontal,
-                                        allowHalfRating: true,
-                                        itemCount: 5,
-                                        itemSize: 35,
-                                        itemPadding: EdgeInsets.symmetric(
-                                            horizontal: 2.0),
-                                        itemBuilder: (context, _) => Icon(
-                                          Icons.star,
-                                          color: Colors.amber,
-                                        ),
-                                        onRatingUpdate: (newRating) {
-                                          updateProductRating(
-                                              post['id'], newRating);
-                                        },
-                                      ),
-                                      SizedBox(width: 8),
-                                      ElevatedButton.icon(
-                                        onPressed: () {
-                                          print(post['id']);
-
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) => Comments(
-                                                      title: 'Comment Page',
-                                                      postName: post['id'],
-                                                      username: user
-                                                          .email!, // Pass the post['name'] as an attribute
-                                                    )),
-                                          );
-
-                                          // Handle the comment button click
-                                          print('Comment button clicked');
-                                        },
-                                        icon: Icon(Icons.comment),
-                                        label: Text('Comment'),
-                                        style: ElevatedButton.styleFrom(
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: 8.0,
+                                    SizedBox(height: 8),
+                                    Row(
+                                      children: [
+                                        Icon(Icons.location_on, size: 16),
+                                        SizedBox(width: 4),
+                                        Flexible(
+                                          child: Text(
+                                            'Vendor: ${post['ProductVendor']}',
+                                            style: TextStyle(fontSize: 16),
                                           ),
                                         ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 8),
+                                    Text(
+                                      'Rating: ${post['ProductRating']}',
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                    SizedBox(height: 16),
+                                    Container(
+                                      height: 200,
+                                      width: double.infinity,
+                                      child: Image.memory(
+                                        base64Decode(post['ProductImage']),
+                                        fit: BoxFit.cover,
                                       ),
-                                    ],
-                                  ),
-                                ],
+                                    ),
+                                    SizedBox(height: 16),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        RatingBar.builder(
+                                          initialRating:
+                                              post['ProductRating'].toDouble(),
+                                          minRating: 1,
+                                          direction: Axis.horizontal,
+                                          allowHalfRating: true,
+                                          itemCount: 5,
+                                          itemSize: 35,
+                                          itemPadding: EdgeInsets.symmetric(
+                                              horizontal: 2.0),
+                                          itemBuilder: (context, _) => Icon(
+                                            Icons.star,
+                                            color: Colors.amber,
+                                          ),
+                                          onRatingUpdate: (newRating) {
+                                            updateProductRating(
+                                                post['id'], newRating);
+                                          },
+                                        ),
+                                        SizedBox(width: 8),
+                                        ElevatedButton.icon(
+                                          onPressed: () {
+                                            print(post['id']);
+
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      Comments(
+                                                        title: 'Comment Page',
+                                                        postName: post['id'],
+                                                        username: user
+                                                            .email!, // Pass the post['name'] as an attribute
+                                                      )),
+                                            );
+
+                                            // Handle the comment button click
+                                            print('Comment button clicked');
+                                          },
+                                          icon: Icon(Icons.comment),
+                                          label: Text('Comment'),
+                                          style: ElevatedButton.styleFrom(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 8.0,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          );
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                floatingActionButton: FloatingActionButton(
+                  onPressed: () {
+                    // Handle FAB press
+                  },
+                  child: Icon(Icons.add),
+                ),
+                floatingActionButtonLocation:
+                    FloatingActionButtonLocation.centerDocked,
+                bottomNavigationBar: BottomAppBar(
+                  shape: CircularNotchedRectangle(),
+                  notchMargin: 6.0,
+                  color: Color(0xFFEDE8E8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.shopping_cart),
+                        onPressed: () {
+                          // Handle cart icon press
                         },
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              floatingActionButton: FloatingActionButton(
-                onPressed: () {
-                  /*
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => PostPage(
-                    username:
-                        widget.username // Pass the post['name'] as an attribute
-                    )),
-          );
-          */
-                },
-                tooltip: 'Write post',
-                child: const Icon(Icons.post_add),
-              ),
-            );
+                      IconButton(
+                        icon: Icon(Icons.list),
+                        onPressed: () {
+                          // Handle orders icon press
+                        },
+                      ),
+                      SizedBox(width: 40.0), // Space for the FAB
+                      IconButton(
+                        icon: Icon(Icons.favorite),
+                        onPressed: () {
+                          // Handle favorite icon press
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.person),
+                        onPressed: () {
+                          // Handle user profile icon press
+                        },
+                      ),
+                    ],
+                  ),
+                ));
           }
         }
       },
