@@ -4,6 +4,7 @@ import 'package:cosmetics_project/Pages/Login.dart';
 import 'Pages/Home_Page.dart';
 import 'Pages/ProductPage.dart';
 import 'Pages/Comments.dart';
+import 'Pages/Cart.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,6 +43,10 @@ class MyApp extends StatelessWidget {
         '/ProductPage': (dummyCtx) => Products(
               title: 'Product Page',
               postName: 'post1',
+              username: '_usernameController',
+            ),
+        '/Cart': (dummyCtx) => Cart(
+              title: 'Product Page',
               username: '_usernameController',
             )
       },

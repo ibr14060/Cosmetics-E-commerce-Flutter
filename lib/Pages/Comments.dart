@@ -187,6 +187,8 @@ class CommentsState extends State<Comments> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
+      backgroundColor: Color(0xFFFFCCC1), // Set background color here
+
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

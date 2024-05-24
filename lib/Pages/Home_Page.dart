@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:cosmetics_project/Pages/Cart.dart';
 import 'package:cosmetics_project/Pages/Comments.dart';
 import 'package:cosmetics_project/Pages/ProductPage.dart';
 import 'package:flutter/cupertino.dart';
@@ -771,8 +772,6 @@ class HomePageState extends State<HomePage> {
                                                               .email!, // Pass the post['name'] as an attribute
                                                         )),
                                               );
-
-                                              // Handle the comment button click
                                               print(
                                                   'view product button clicked');
                                             },
@@ -813,7 +812,15 @@ class HomePageState extends State<HomePage> {
                       IconButton(
                         icon: Icon(Icons.shopping_cart),
                         onPressed: () {
-                          // Handle cart icon press
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Cart(
+                                      title: 'Your Cart ',
+                                      username: user
+                                          .email!, // Pass the post['name'] as an attribute
+                                    )),
+                          );
                         },
                       ),
                       IconButton(
