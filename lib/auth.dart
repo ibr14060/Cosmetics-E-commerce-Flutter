@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:http/http.dart' as http;
@@ -20,6 +20,7 @@ class Auth {
   }) async {
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
+      _storeAuthState(true); // Store authentication state
     } on FirebaseAuthException catch (e) {
       throw _handleFirebaseAuthException(e);
     }
@@ -81,6 +82,7 @@ class Auth {
               Favresponse.statusCode == 200 &&
               Orderresponse.statusCode == 200) {
             print('User data added to database');
+            _storeAuthState(true); // Store authentication state
           } else {
             print('Error adding user data to database');
           }
@@ -98,6 +100,16 @@ class Auth {
       print('An error occurred: $e');
       return null;
     }
+  }
+
+  void _storeAuthState(bool isLoggedIn) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('isLoggedIn', isLoggedIn);
+  }
+
+  Future<bool> getAuthState() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('isLoggedIn') ?? false;
   }
 
   Future<void> _createEmptyCart(String userId, String email) async {
@@ -133,6 +145,7 @@ class Auth {
 
   Future<void> signOut() async {
     await _auth.signOut();
+    _storeAuthState(false); // Clear authentication state
   }
 
   String _handleFirebaseAuthException(FirebaseAuthException e) {
