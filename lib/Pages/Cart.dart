@@ -322,6 +322,57 @@ class CartState extends State<Cart> {
     }
   }
 
+  void toggleCheckout(String productId, String userEmail) async {
+    try {
+      final response = await http.get(Uri.parse(
+          'https://mobileproject12-d6fad-default-rtdb.firebaseio.com/Checkout.json'));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> CartData = json.decode(response.body);
+
+        String userKey = '';
+        Map<String, dynamic>? userCartItems;
+
+        CartData.forEach((key, value) {
+          if (value['email'] == userEmail) {
+            userKey = key;
+            userCartItems = value['Products'];
+          }
+        });
+
+        if (userKey.isNotEmpty) {
+          if (userCartItems != null && userCartItems!.containsKey(productId)) {
+            userCartItems!.remove(productId);
+          } else {
+            userCartItems ??= {};
+            userCartItems![productId] = {'id': productId};
+          }
+          final updateResponse = await http.patch(
+            Uri.parse(
+                'https://mobileproject12-d6fad-default-rtdb.firebaseio.com/Cart/$userKey.json'),
+            body: json.encode({
+              'Products': userCartItems,
+            }),
+          );
+
+          if (updateResponse.statusCode == 200) {
+            print('Cart items updated successfully');
+            fetchCartItems();
+          } else {
+            print(
+                'Failed to update favorite items: ${updateResponse.statusCode}');
+          }
+        } else {
+          print('User not found');
+        }
+      } else {
+        print('Failed to fetch cart items: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error fetching cart items: $error');
+    }
+  }
+
   void toggleCart(String productId, String userEmail) async {
     try {
       final response = await http.get(Uri.parse(
@@ -379,6 +430,47 @@ class CartState extends State<Cart> {
       totalPrice += (product['ProductPrice'] * product['quantity']).toInt();
     }
     return totalPrice;
+  }
+
+  void checkout() async {
+    try {
+      final User? user = Auth().currentUser;
+      if (user == null) {
+        // Handle the case where the user is not authenticated
+        return;
+      }
+
+      // Collect product IDs and quantities
+      final List<Map<String, dynamic>> checkoutData = [];
+      for (var product in CartData) {
+        final productId = product['id']; // Use 'id' instead of 'productId'
+        final quantity = product['quantity'];
+        final Map<String, dynamic> item = {
+          'id': productId,
+          'quantity': quantity,
+        };
+        checkoutData.add(item);
+      }
+
+      // Send checkout data to the endpoint
+      final response = await http.post(
+        Uri.parse(
+            'https://mobileproject12-d6fad-default-rtdb.firebaseio.com/Checkout.json'),
+        body: json.encode({
+          'email': user.email,
+          'products': checkoutData,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        print('Checkout successful.');
+        // You can add additional logic here if needed, such as navigation to a confirmation screen.
+      } else {
+        print('Failed to checkout: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error during checkout: $error');
+    }
   }
 
   @override
@@ -504,7 +596,7 @@ class CartState extends State<Cart> {
             ),
           ),
           SizedBox(height: 16),
-          ElevatedButton(onPressed: () {}, child: Text('Checkout')),
+          ElevatedButton(onPressed: checkout, child: Text('Checkout')),
           SizedBox(height: 16),
         ],
       ),
