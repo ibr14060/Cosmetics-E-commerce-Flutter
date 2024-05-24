@@ -317,7 +317,7 @@ class HomePageState extends State<HomePage> {
             userCartItems!.remove(productId);
           } else {
             userCartItems ??= {};
-            userCartItems![productId] = {'id': productId};
+            userCartItems![productId] = {'id': productId, 'quantity': 1};
           }
           final updateResponse = await http.patch(
             Uri.parse(

@@ -322,6 +322,65 @@ class CartState extends State<Cart> {
     }
   }
 
+  void toggleCart(String productId, String userEmail) async {
+    try {
+      final response = await http.get(Uri.parse(
+          'https://mobileproject12-d6fad-default-rtdb.firebaseio.com/Cart.json'));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> CartData = json.decode(response.body);
+
+        String userKey = '';
+        Map<String, dynamic>? userCartItems;
+
+        CartData.forEach((key, value) {
+          if (value['email'] == userEmail) {
+            userKey = key;
+            userCartItems = value['Products'];
+          }
+        });
+
+        if (userKey.isNotEmpty) {
+          if (userCartItems != null && userCartItems!.containsKey(productId)) {
+            userCartItems!.remove(productId);
+          } else {
+            userCartItems ??= {};
+            userCartItems![productId] = {'id': productId};
+          }
+          final updateResponse = await http.patch(
+            Uri.parse(
+                'https://mobileproject12-d6fad-default-rtdb.firebaseio.com/Cart/$userKey.json'),
+            body: json.encode({
+              'Products': userCartItems,
+            }),
+          );
+
+          if (updateResponse.statusCode == 200) {
+            print('Cart items updated successfully');
+            fetchCartItems();
+          } else {
+            print(
+                'Failed to update favorite items: ${updateResponse.statusCode}');
+          }
+        } else {
+          print('User not found');
+        }
+      } else {
+        print('Failed to fetch cart items: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error fetching cart items: $error');
+    }
+  }
+
+  double calculateTotalPrice() {
+    double totalPrice = 0;
+    for (var product in CartData) {
+      totalPrice += (product['ProductPrice'] * product['quantity']).toInt();
+    }
+    return totalPrice;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -332,7 +391,6 @@ class CartState extends State<Cart> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 16),
           Expanded(
             child: ListView.builder(
               itemCount: CartData.length,
@@ -345,70 +403,90 @@ class CartState extends State<Cart> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
                     side: BorderSide(
-                      color: Color.fromARGB(255, 153, 153, 153),
+                      color: Color(0xFFEDE8E8),
                       width: 1,
                     ),
                   ),
                   elevation: 2,
                   margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                   child: Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Column(
+                    padding: EdgeInsets.all(11),
+                    child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: 16),
                         if (product['ProductImage'] != null &&
                             product['ProductImage'] != '')
                           Container(
-                            height: 200,
-                            width: double.infinity,
+                            height: 100,
                             child: Image.memory(
                               base64Decode(product['ProductImage']),
-                              fit: BoxFit.cover,
+                              fit: BoxFit.contain,
                             ),
                           ),
-                        SizedBox(height: 8),
-                        Text(
-                          '${product['ProductName']}',
-                          style: TextStyle(fontSize: 16),
-                        ),
-                        SizedBox(height: 8),
-                        Text(
-                          'Price: ${product['ProductPrice']} EGP',
-                          style: TextStyle(fontSize: 16),
-                        ),
-                        SizedBox(height: 16),
-                        Row(
-                          children: [
-                            ElevatedButton(
-                              onPressed: () {
-                                // Handle decrease quantity
-                                decreaseQuantity(productId);
-                              },
-                              child: Icon(Icons.remove),
-                              style: ElevatedButton.styleFrom(
-                                shape: CircleBorder(),
-                                padding: EdgeInsets.all(8),
+                        SizedBox(width: 8),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '${product['ProductName']}',
+                                style: TextStyle(fontSize: 14),
                               ),
-                            ),
-                            SizedBox(width: 8),
-                            Text(
-                              '${product['quantity']}', // Display quantity here
-                              style: TextStyle(fontSize: 16),
-                            ),
-                            SizedBox(width: 8),
-                            ElevatedButton(
-                              onPressed: () {
-                                // Handle increase quantity
-                                increaseQuantity(productId);
-                              },
-                              child: Icon(Icons.add),
-                              style: ElevatedButton.styleFrom(
-                                shape: CircleBorder(),
-                                padding: EdgeInsets.all(8),
+                              SizedBox(height: 8),
+                              Text(
+                                'Price: ${product['ProductPrice']} EGP',
+                                style: TextStyle(fontSize: 14),
                               ),
-                            ),
-                          ],
+                              SizedBox(height: 9),
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      // Handle decrease quantity
+                                      decreaseQuantity(productId);
+                                    },
+                                    child: Icon(Icons.remove),
+                                    style: ElevatedButton.styleFrom(
+                                      shape: CircleBorder(),
+                                      padding: EdgeInsets.all(6),
+                                    ),
+                                  ),
+                                  SizedBox(width: 5),
+                                  Text(
+                                    '${product['quantity']}', // Display quantity here
+                                    style: TextStyle(fontSize: 14),
+                                  ),
+                                  SizedBox(width: 5),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      // Handle increase quantity
+                                      increaseQuantity(productId);
+                                    },
+                                    child: Icon(Icons.add),
+                                    style: ElevatedButton.styleFrom(
+                                      shape: CircleBorder(),
+                                      padding: EdgeInsets.all(6),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            toggleCart(productId, widget.username);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.transparent,
+                            shadowColor: Colors.transparent,
+                          ),
+                          child: Icon(
+                            Icons.delete,
+                            color: Color.fromARGB(255, 134, 5,
+                                5), // Adjust the color of the icon as needed
+                          ),
                         ),
                       ],
                     ),
@@ -417,7 +495,17 @@ class CartState extends State<Cart> {
               },
             ),
           ),
-          // Add Cart form
+          SizedBox(height: 8),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            child: Text(
+              'TOTAL : ${calculateTotalPrice()} EGP',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+          ),
+          SizedBox(height: 16),
+          ElevatedButton(onPressed: () {}, child: Text('Checkout')),
+          SizedBox(height: 16),
         ],
       ),
       floatingActionButton: FloatingActionButton(
