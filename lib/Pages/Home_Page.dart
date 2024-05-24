@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:cosmetics_project/Pages/Comments.dart';
+import 'package:cosmetics_project/Pages/ProductPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter/material.dart';
@@ -754,6 +755,34 @@ class HomePageState extends State<HomePage> {
                                                 ),
                                               ),
                                             ],
+                                          ),
+                                          ElevatedButton.icon(
+                                            onPressed: () {
+                                              print(post['id']);
+
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        Products(
+                                                          title: 'Product Page',
+                                                          postName: post['id'],
+                                                          username: user
+                                                              .email!, // Pass the post['name'] as an attribute
+                                                        )),
+                                              );
+
+                                              // Handle the comment button click
+                                              print(
+                                                  'view product button clicked');
+                                            },
+                                            icon: Icon(Icons.navigate_next),
+                                            label: Text('View Product'),
+                                            style: ElevatedButton.styleFrom(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 8.0,
+                                              ),
+                                            ),
                                           ),
                                         ],
                                       ),
