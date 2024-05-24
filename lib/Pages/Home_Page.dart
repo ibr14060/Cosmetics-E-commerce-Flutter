@@ -30,6 +30,48 @@ class HomePageState extends State<HomePage> {
     fetchProducts(); // Fetch posts when the page is initialized
   }
 
+  void updateProductRating(String productId, double newRating) async {
+    try {
+      final response = await http.get(Uri.parse(
+          'https://mobileproject12-d6fad-default-rtdb.firebaseio.com/Products/$productId.json'));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> productData = json.decode(response.body);
+
+        // Extract previous ratings
+        double previousRatings = productData['ProductRating'];
+        double totalRating = 0.0;
+
+        totalRating += previousRatings.toDouble();
+
+        totalRating += newRating;
+
+        // Calculate new average rating
+        double averageRating = totalRating / 2;
+
+        // Update product rating in the database with the new average
+        final updateResponse = await http.patch(
+          Uri.parse(
+              'https://mobileproject12-d6fad-default-rtdb.firebaseio.com/Products/$productId.json'),
+          body: json.encode({
+            'ProductRating': averageRating,
+          }),
+        );
+
+        if (updateResponse.statusCode == 200) {
+          print('Product rating updated successfully');
+        } else {
+          print(
+              'Failed to update product rating: ${updateResponse.statusCode}');
+        }
+      } else {
+        print('Failed to fetch product data: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error updating product rating: $error');
+    }
+  }
+
   Future<void> fetchProducts() async {
     try {
       final User? user = Auth().currentUser;
@@ -45,9 +87,7 @@ class HomePageState extends State<HomePage> {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonData = json.decode(response.body);
-//
 
-//
         // Clear existing post data
         ProductsData.clear();
 
@@ -306,7 +346,7 @@ class HomePageState extends State<HomePage> {
                             padding: EdgeInsets.all(16.0),
                             child: Center(
                               child: Text(
-                                'Galm & Beauty', // Your title text
+                                'Glam & Beauty', // Your title text
                                 style: TextStyle(
                                   fontSize: 24,
                                   fontWeight: FontWeight.bold,
@@ -548,8 +588,9 @@ class HomePageState extends State<HomePage> {
                                           Icons.star,
                                           color: Colors.amber,
                                         ),
-                                        onRatingUpdate: (rating) {
-                                          print(rating);
+                                        onRatingUpdate: (newRating) {
+                                          updateProductRating(
+                                              post['id'], newRating);
                                         },
                                       ),
                                       SizedBox(width: 8),
