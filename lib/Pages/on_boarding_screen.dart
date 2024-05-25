@@ -1,3 +1,4 @@
+import 'package:cosmetics_project/Pages/Guest.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +20,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   final store = GetStorage();
   onButtonPressed(context) {
     store.write('onBoarding', true);
-    return Navigator.pushReplacementNamed(context, MainScreen.id);
+    Navigator.pushReplacementNamed(context, '/GuestHomePage');
   }
 
   @override

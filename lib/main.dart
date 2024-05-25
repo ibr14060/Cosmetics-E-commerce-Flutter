@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cosmetics_project/Pages/Guest.dart';
 import 'package:cosmetics_project/Pages/main_screen.dart';
 import 'package:cosmetics_project/Pages/on_boarding_screen.dart';
 import 'package:flutter/material.dart';
@@ -97,6 +98,9 @@ class MyApp extends StatelessWidget {
         '/Checkout': (context) => Checkout(
               title: 'FavItems Page',
               username: '_usernameController',
+            ),
+        '/GuestHomePage': (context) => GuestHomePage(
+              title: 'Home Page',
             ),
       },
     );
