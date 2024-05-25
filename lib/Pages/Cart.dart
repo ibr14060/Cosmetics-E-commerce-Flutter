@@ -75,7 +75,7 @@ class CartState extends State<Cart> {
 
       final response = await http.get(
         Uri.parse(
-          'https://mobileproject12-d6fad-default-rtdb.firebaseio.com/Cart.json',
+          'https://mobileproject12-d6fad-default-rtdb.firebaseio.com/FavItems.json',
         ),
       );
 
