@@ -46,6 +46,13 @@ dependencies:
   line_icons: ^2.0.3
   shared_preferences: ^2.2.3
   google_maps_flutter: ^2.6.1
+  uuid: ^4.4.0
+  iconly: ^1.0.1
+  dots_indicator: ^3.0.0
+  get_storage: ^2.1.1
+  youtube_player_flutter: ^9.0.1
+  provider: ^6.1.2
+
 
 dev_dependencies:
   flutter_test:
@@ -57,17 +64,24 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^4.0.0
-
+# corrected spelling and indentation
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter packages.
 flutter:
 
+
+
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+  assets:
+    - assets/images/
+
+
 
   # To add assets to your application, add an assets section, like this:
   # assets:
