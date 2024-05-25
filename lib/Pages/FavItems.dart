@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cosmetics_project/Pages/Cart.dart';
 import 'package:cosmetics_project/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -277,6 +278,8 @@ class FavItemsState extends State<FavItems> {
 
   @override
   Widget build(BuildContext context) {
+    final User? user = Auth().currentUser; // Define user here
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -377,7 +380,15 @@ class FavItemsState extends State<FavItems> {
             IconButton(
               icon: Icon(Icons.shopping_cart),
               onPressed: () {
-                // Handle FavItems icon press
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Cart(
+                      title: 'Your Cart ',
+                      username: user!.email!,
+                    ),
+                  ),
+                );
               },
             ),
             IconButton(
@@ -386,11 +397,19 @@ class FavItemsState extends State<FavItems> {
                 // Handle orders icon press
               },
             ),
-            SizedBox(width: 40.0), // Space for the FAB
+            SizedBox(width: 40.0),
             IconButton(
               icon: Icon(Icons.favorite),
               onPressed: () {
-                // Handle favorite icon press
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FavItems(
+                      title: 'Your Wishlist ',
+                      username: user!.email!,
+                    ),
+                  ),
+                );
               },
             ),
             IconButton(

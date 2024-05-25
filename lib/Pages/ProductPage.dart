@@ -1,7 +1,12 @@
 import 'dart:io';
+import 'package:cosmetics_project/Pages/Cart.dart';
+import 'package:cosmetics_project/auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
+import 'FavItems.dart';
 
 class Products extends StatefulWidget {
   const Products({
@@ -65,6 +70,8 @@ class ProductsState extends State<Products> {
 
   @override
   Widget build(BuildContext context) {
+    final User? user = Auth().currentUser; // Define user here
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -160,7 +167,15 @@ class ProductsState extends State<Products> {
             IconButton(
               icon: Icon(Icons.shopping_cart),
               onPressed: () {
-                // Handle cart icon press
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Cart(
+                      title: 'Your Cart ',
+                      username: user!.email!,
+                    ),
+                  ),
+                );
               },
             ),
             IconButton(
@@ -169,11 +184,19 @@ class ProductsState extends State<Products> {
                 // Handle orders icon press
               },
             ),
-            SizedBox(width: 40.0), // Space for the FAB
+            SizedBox(width: 40.0),
             IconButton(
               icon: Icon(Icons.favorite),
               onPressed: () {
-                // Handle favorite icon press
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FavItems(
+                      title: 'Your Wishlist ',
+                      username: user!.email!,
+                    ),
+                  ),
+                );
               },
             ),
             IconButton(

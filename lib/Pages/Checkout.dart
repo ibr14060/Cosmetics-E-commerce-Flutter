@@ -1,5 +1,8 @@
 import 'dart:io';
+import 'package:cosmetics_project/Pages/Cart.dart';
+import 'package:cosmetics_project/Pages/FavItems.dart';
 import 'package:cosmetics_project/auth.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -23,8 +26,16 @@ class FavItemsState extends State<Checkout> {
   List<Map<String, dynamic>> CheckoutData = [];
   List<String> CheckoutProductIds = [];
   List<Map<String, dynamic>> productData = [];
+  List<String> paymentMethods = [
+    'Credit Card',
+    'Debit Card',
+    'Cash on Delivery'
+  ];
+  String selectedPaymentMethod =
+      'Credit Card'; // Initially select the first payment method
 
   String experience = '';
+  LatLng? selectedLocation;
   int rating = 1;
 
   void initState() {
@@ -326,8 +337,18 @@ class FavItemsState extends State<Checkout> {
     }
   }
 
+  double calculateTotal() {
+    double total = 0;
+    for (var product in CheckoutData) {
+      total += product['ProductPrice'] * product['quantity'];
+    }
+    return total;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final User? user = Auth().currentUser; // Define user here
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -412,6 +433,75 @@ class FavItemsState extends State<Checkout> {
               },
             ),
           ),
+          SizedBox(height: 8),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            child: Text(
+              'TOTAL : ${calculateTotal()} EGP',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+          ),
+          SizedBox(height: 16),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            child: DropdownButton<String>(
+              value: selectedPaymentMethod,
+              icon: Icon(Icons.arrow_downward),
+              iconSize: 24,
+              elevation: 16,
+              style: TextStyle(color: Colors.black),
+              underline: Container(
+                height: 2,
+                color: Colors.black,
+              ),
+              onChanged: (String? newValue) {
+                setState(() {
+                  selectedPaymentMethod = newValue!;
+                });
+              },
+              items:
+                  paymentMethods.map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            child: Text(
+              'Address',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+          ),
+          SizedBox(height: 8),
+          Container(
+            height: 300, // Adjust height as needed
+            child: GoogleMap(
+              initialCameraPosition: CameraPosition(
+                target: LatLng(0, 0), // Initial position
+                zoom: 15,
+              ),
+              onTap: (LatLng latLng) {
+                setState(() {
+                  selectedLocation =
+                      latLng; // Update selectedLocation when tapped on the map
+                });
+              },
+              markers: selectedLocation != null
+                  ? Set<Marker>.from([
+                      Marker(
+                        markerId: MarkerId('selectedLocation'),
+                        position: selectedLocation!,
+                      ),
+                    ])
+                  : Set<Marker>(),
+            ),
+          ),
+          SizedBox(height: 16),
+          ElevatedButton(onPressed: checkout, child: Text('Checkout')),
+          SizedBox(height: 16),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -432,7 +522,15 @@ class FavItemsState extends State<Checkout> {
             IconButton(
               icon: Icon(Icons.shopping_cart),
               onPressed: () {
-                // Handle FavItems icon press
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Cart(
+                      title: 'Your Cart ',
+                      username: user!.email!,
+                    ),
+                  ),
+                );
               },
             ),
             IconButton(
@@ -441,11 +539,19 @@ class FavItemsState extends State<Checkout> {
                 // Handle orders icon press
               },
             ),
-            SizedBox(width: 40.0), // Space for the FAB
+            SizedBox(width: 40.0),
             IconButton(
               icon: Icon(Icons.favorite),
               onPressed: () {
-                // Handle favorite icon press
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FavItems(
+                      title: 'Your Wishlist ',
+                      username: user!.email!,
+                    ),
+                  ),
+                );
               },
             ),
             IconButton(
