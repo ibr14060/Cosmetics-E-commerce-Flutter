@@ -316,18 +316,38 @@ class FavItemsState extends State<Checkout> {
         final Map<String, dynamic> item = {
           'id': productId,
           'quantity': quantity,
+          'ProductImage': product['ProductImage'],
+          'ProductName': product['ProductName'],
+          'ProductPrice': product['ProductPrice'],
+          'ProductVendor': product['ProductVendor'],
+          'ProductRating': product['ProductRating'],
+          'ProductDescription': product['ProductDescription'],
+          'ProductCategory': product['ProductCategory'],
         };
         checkoutData.add(item);
+      }
+
+      // Create a map for additional checkout information
+      final Map<String, dynamic> checkoutInfo = {
+        'email': user.email,
+        'products': checkoutData,
+        'paymentMethod': selectedPaymentMethod,
+        'address': address,
+      };
+
+      // Add payment details if selected payment method is credit or debit card
+      if (selectedPaymentMethod == 'Credit Card' ||
+          selectedPaymentMethod == 'Debit Card') {
+        checkoutInfo['cardNumber'] = cardNumber;
+        checkoutInfo['cardExpiration'] = cardExpiration;
+        checkoutInfo['cardCVV'] = cardCVV;
       }
 
       // Send checkout data to the endpoint
       final response = await http.post(
         Uri.parse(
-            'https://mobileproject12-d6fad-default-rtdb.firebaseio.com/Checkout.json'),
-        body: json.encode({
-          'email': user.email,
-          'products': checkoutData,
-        }),
+            'https://mobileproject12-d6fad-default-rtdb.firebaseio.com/Orders.json'),
+        body: json.encode(checkoutInfo),
       );
 
       if (response.statusCode == 200) {
