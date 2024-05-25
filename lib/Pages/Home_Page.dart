@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:cosmetics_project/Pages/Cart.dart';
+import 'package:cosmetics_project/Pages/Category.dart';
 import 'package:cosmetics_project/Pages/Comments.dart';
 import 'package:cosmetics_project/Pages/FavItems.dart';
 import 'package:cosmetics_project/Pages/ProductPage.dart';
@@ -16,6 +17,7 @@ import 'package:line_icons/line_icons.dart';
 class HomePage extends StatefulWidget {
   HomePage({Key? key, required this.title, required this.username})
       : super(key: key);
+  final User? user = Auth().currentUser;
 
   final String title;
   final String username;
@@ -29,6 +31,7 @@ class HomePageState extends State<HomePage> {
   List<Map<String, dynamic>> usersData = [];
   List<String> favoriteProductIds = [];
   List<String> CartProductIds = [];
+  final User? currentUser = FirebaseAuth.instance.currentUser;
   void initState() {
     super.initState();
     fetchProducts(); // Fetch posts when the page is initialized
@@ -382,48 +385,42 @@ class HomePageState extends State<HomePage> {
 
   String searchText = '';
   bool isSearchFocused = false;
-  NavigateToFragrances() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => Comments(
-                title: 'Comment Page',
-                postName: post['id'],
-                username: user.email!, // Pass the post['name'] as an attribute
-              )),
-    );
-  }
-
   List<Map<String, dynamic>> buttonData = [
     {
       'name': 'FRAGRANCES',
       'icon': Icons.spa,
-      'onPressed': () {
-        print('Lip button clicked');
-      },
+      'category': 'FRAGRANCES',
     },
     {
       'name': 'HAIR CARE',
       'icon': Icons.spa,
-      'onPressed': () {
-        print('Body Splash button clicked');
-      },
+      'category': 'HAIR CARE',
     },
     {
       'name': 'Skin Care',
       'icon': Icons.spa,
-      'onPressed': () {
-        print('Skin Care button clicked');
-      },
+      'category': 'Skin Care',
     },
     {
       'name': 'Makeup',
       'icon': Icons.restaurant,
-      'onPressed': () {
-        print('Restaurant button clicked');
-      },
+      'category': 'Makeup',
     },
   ];
+
+  void navigateToCategoryPage(String category) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CategoryPage(
+          title: category,
+          username: widget.username,
+          category: category,
+        ),
+      ),
+    );
+  }
+
   List<Map<String, dynamic>> SortData = [
     {
       'name': 'Time(Latest)',
@@ -576,7 +573,8 @@ class HomePageState extends State<HomePage> {
                                           : null, // Space between buttons
                                       child: ElevatedButton.icon(
                                         onPressed: () {
-                                          button['onPressed']();
+                                          navigateToCategoryPage(
+                                              button['category']);
                                         },
                                         icon: Icon(button['icon']),
                                         label: Text(button['name']),

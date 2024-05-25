@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:cosmetics_project/Pages/Cart.dart';
+import 'package:cosmetics_project/Pages/Category.dart';
 import 'package:cosmetics_project/Pages/Comments.dart';
 import 'package:cosmetics_project/Pages/FavItems.dart';
 import 'package:cosmetics_project/Pages/GuestProductPage.dart';
@@ -170,44 +171,81 @@ class GuestHomePageState extends State<GuestHomePage> {
   String searchText = '';
   bool isSearchFocused = false;
 
-  List<Map<String, dynamic>> buttonData = [
+  final List<Map<String, dynamic>> buttonData = [
     {
       'name': 'FRAGRANCES',
       'icon': Icons.spa,
-      'onPressed': () {
-        print('Lip button clicked');
+      'onPressed': (BuildContext context, User? user) {
+        if (user != null) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CategoryPage(
+                title: 'FRAGRANCES',
+                username: user.email!, // Add a null check here
+                category: 'FRAGRANCES',
+              ),
+            ),
+          );
+        }
       },
     },
     {
       'name': 'HAIR CARE',
       'icon': Icons.spa,
-      'onPressed': () {
-        print('Body Splash button clicked');
+      'onPressed': (BuildContext context, User? user) {
+        if (user != null) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CategoryPage(
+                title: 'HAIR CARE',
+                username: user.email!, // Add a null check here
+                category: 'HAIR CARE',
+              ),
+            ),
+          );
+        }
       },
     },
     {
       'name': 'Skin Care',
       'icon': Icons.spa,
-      'onPressed': () {
-        print('Skin Care button clicked');
+      'onPressed': (BuildContext context, User? user) {
+        if (user != null) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CategoryPage(
+                title: 'Skin Care',
+                username: user.email!, // Add a null check here
+                category: 'Skin Care',
+              ),
+            ),
+          );
+        }
       },
     },
     {
-      'name': 'Eye Products',
+      'name': 'Makeup',
       'icon': Icons.restaurant,
-      'onPressed': () {
-        print('Restaurant button clicked');
-      },
-    },
-    {
-      'name': 'Perfume',
-      'icon': Icons.beach_access,
-      'onPressed': () {
-        //  navigatetobeach();
-        print('Perfume button clicked');
+      'onPressed': (BuildContext context, User? user) {
+        if (user != null) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CategoryPage(
+                title: 'Makeup',
+                username: user.email!, // Add a null check here
+                category: 'Makeup',
+              ),
+            ),
+          );
+        }
       },
     },
   ];
+
   List<Map<String, dynamic>> SortData = [
     {
       'name': 'Time(Latest)',
