@@ -8,6 +8,7 @@ class LoginScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Login Page'),
+        backgroundColor: Color(0xFFEDE8E8),
       ),
       body: LoginScreenApp(),
     );
@@ -193,6 +194,12 @@ class _LoginScreenState extends State<LoginScreenApp> {
             ElevatedButton(
               onPressed: _loginOrSignup,
               child: Text(isLogin ? 'Login' : 'Sign Up'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pushReplacementNamed(context, '/GuestHomePage');
+              },
+              child: Text('Continue as Guest User'),
             ),
             TextButton(
               onPressed: toggleFormMode,

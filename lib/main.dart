@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cosmetics_project/Pages/Category.dart';
 import 'package:cosmetics_project/Pages/Guest.dart';
 import 'package:cosmetics_project/Pages/main_screen.dart';
 import 'package:cosmetics_project/Pages/on_boarding_screen.dart';
@@ -101,6 +102,11 @@ class MyApp extends StatelessWidget {
             ),
         '/GuestHomePage': (context) => GuestHomePage(
               title: 'Home Page',
+            ),
+        '/CategoryPage': (context) => CategoryPage(
+              title: 'Home Page',
+              username: '_usernameController',
+              category: 'dd',
             ),
       },
     );

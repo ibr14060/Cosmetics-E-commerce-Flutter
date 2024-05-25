@@ -13,17 +13,21 @@ import 'package:cupertino_icons/cupertino_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:line_icons/line_icons.dart';
 
-class HomePage extends StatefulWidget {
-  HomePage({Key? key, required this.title, required this.username})
+class CategoryPage extends StatefulWidget {
+  CategoryPage(
+      {Key? key,
+      required this.title,
+      required this.username,
+      required this.category})
       : super(key: key);
-
+  final String category;
   final String title;
   final String username;
   @override
-  State<HomePage> createState() => HomePageState();
+  State<CategoryPage> createState() => HomePageState();
 }
 
-class HomePageState extends State<HomePage> {
+class HomePageState extends State<CategoryPage> {
   List<Map<String, dynamic>> ProductsData = [];
   List<Map<String, dynamic>> allusersData = [];
   List<Map<String, dynamic>> usersData = [];
@@ -31,7 +35,8 @@ class HomePageState extends State<HomePage> {
   List<String> CartProductIds = [];
   void initState() {
     super.initState();
-    fetchProducts(); // Fetch posts when the page is initialized
+    fetchProductsByCategory(
+        widget.category); // Fetch posts when the page is initialized
   }
 
   void updateProductRating(String productId, double newRating) async {
@@ -142,7 +147,7 @@ class HomePageState extends State<HomePage> {
     }
   }
 
-  Future<void> fetchProducts() async {
+  Future<void> fetchProductsByCategory(String category) async {
     try {
       final User? user = Auth().currentUser;
       if (user == null) {
@@ -164,18 +169,20 @@ class HomePageState extends State<HomePage> {
         ProductsData.clear();
 
         jsonData.forEach((key, value) {
-          final Map<String, dynamic> post = {
-            'id': key,
-            'ProductImage': value['ProductImage'],
-            'ProductName': value['ProductName'],
-            'ProductPrice': value['ProductPrice'],
-            'ProductVendor': value['ProductVendor'],
-            'ProductRating': value['ProductRating'],
-            'ProductDescription': value['ProductDescription'],
-            'ProductCategory': value['ProductCategory'],
-          };
+          if (value['ProductCategory'] == category) {
+            final Map<String, dynamic> post = {
+              'id': key,
+              'ProductImage': value['ProductImage'],
+              'ProductName': value['ProductName'],
+              'ProductPrice': value['ProductPrice'],
+              'ProductVendor': value['ProductVendor'],
+              'ProductRating': value['ProductRating'],
+              'ProductDescription': value['ProductDescription'],
+              'ProductCategory': value['ProductCategory'],
+            };
 
-          ProductsData.add(post);
+            ProductsData.add(post);
+          }
         });
 
         // var responseData = json.decode(response.body);

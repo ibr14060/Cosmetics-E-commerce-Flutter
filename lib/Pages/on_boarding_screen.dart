@@ -45,8 +45,9 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
             },
             children: [
               OnBoardPage(
-                boardImage: Image.asset(
-                  'images/p.jpeg',
+                boardImage: Image(
+                  image: NetworkImage(
+                      'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRdWYxtPEVZaJyCmgfBBGkl8WnHqR3nC_I5RnW76lbamDYprXxO'),
                   fit: BoxFit.cover, // Adjust the fit property
                   width: MediaQuery.of(context).size.width,
                 ),
@@ -54,12 +55,14 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                     'Welcome to beauty store where you can find latest makeup products',
               ),
               OnBoardPage(
-                boardImage: Image.asset(
-                  'images/2.jpeg',
+                boardImage: Image(
+                  image: NetworkImage(
+                      'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRdWYxtPEVZaJyCmgfBBGkl8WnHqR3nC_I5RnW76lbamDYprXxO'),
                   fit: BoxFit.cover, // Adjust the fit property
                   width: MediaQuery.of(context).size.width,
                 ),
-                boardText: 'YOUR MUST HAVES HAIR STYLING TOOLS',
+                boardText:
+                    'Welcome to beauty store where you can find latest makeup products',
               ),
               OnBoardPage(
                 boardImage: Image.asset(
