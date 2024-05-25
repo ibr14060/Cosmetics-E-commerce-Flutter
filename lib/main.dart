@@ -6,6 +6,7 @@ import 'Pages/ProductPage.dart';
 import 'Pages/Comments.dart';
 import 'Pages/Cart.dart';
 import 'Pages/FavItems.dart';
+import 'Pages/Checkout.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -53,7 +54,11 @@ class MyApp extends StatelessWidget {
         '/FavItems': (dummyCtx) => FavItems(
               title: 'FavItems Page',
               username: '_usernameController',
-            )
+            ),
+        '/Checkout': (dummyCtx) => Checkout(
+              title: 'FavItems Page',
+              username: '_usernameController',
+            ),
       },
     );
   }

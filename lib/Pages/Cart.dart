@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cosmetics_project/Pages/Checkout.dart';
 import 'package:cosmetics_project/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -75,7 +76,7 @@ class CartState extends State<Cart> {
 
       final response = await http.get(
         Uri.parse(
-          'https://mobileproject12-d6fad-default-rtdb.firebaseio.com/FavItems.json',
+          'https://mobileproject12-d6fad-default-rtdb.firebaseio.com/Cart.json',
         ),
       );
 
@@ -322,57 +323,6 @@ class CartState extends State<Cart> {
     }
   }
 
-  void toggleCheckout(String productId, String userEmail) async {
-    try {
-      final response = await http.get(Uri.parse(
-          'https://mobileproject12-d6fad-default-rtdb.firebaseio.com/Checkout.json'));
-
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> CartData = json.decode(response.body);
-
-        String userKey = '';
-        Map<String, dynamic>? userCartItems;
-
-        CartData.forEach((key, value) {
-          if (value['email'] == userEmail) {
-            userKey = key;
-            userCartItems = value['Products'];
-          }
-        });
-
-        if (userKey.isNotEmpty) {
-          if (userCartItems != null && userCartItems!.containsKey(productId)) {
-            userCartItems!.remove(productId);
-          } else {
-            userCartItems ??= {};
-            userCartItems![productId] = {'id': productId};
-          }
-          final updateResponse = await http.patch(
-            Uri.parse(
-                'https://mobileproject12-d6fad-default-rtdb.firebaseio.com/Cart/$userKey.json'),
-            body: json.encode({
-              'Products': userCartItems,
-            }),
-          );
-
-          if (updateResponse.statusCode == 200) {
-            print('Cart items updated successfully');
-            fetchCartItems();
-          } else {
-            print(
-                'Failed to update favorite items: ${updateResponse.statusCode}');
-          }
-        } else {
-          print('User not found');
-        }
-      } else {
-        print('Failed to fetch cart items: ${response.statusCode}');
-      }
-    } catch (error) {
-      print('Error fetching cart items: $error');
-    }
-  }
-
   void toggleCart(String productId, String userEmail) async {
     try {
       final response = await http.get(Uri.parse(
@@ -464,6 +414,15 @@ class CartState extends State<Cart> {
 
       if (response.statusCode == 200) {
         print('Checkout successful.');
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => Checkout(
+                    title: 'Chekout Page',
+                    username:
+                        user.email!, // Pass the post['name'] as an attribute
+                  )),
+        );
         // You can add additional logic here if needed, such as navigation to a confirmation screen.
       } else {
         print('Failed to checkout: ${response.statusCode}');
