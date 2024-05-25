@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:cosmetics_project/Pages/Cart.dart';
 import 'package:cosmetics_project/Pages/Comments.dart';
+import 'package:cosmetics_project/Pages/FavItems.dart';
 import 'package:cosmetics_project/Pages/ProductPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -833,6 +834,15 @@ class HomePageState extends State<HomePage> {
                       IconButton(
                         icon: Icon(Icons.favorite),
                         onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => FavItems(
+                                      title: 'Your Wishlist ',
+                                      username: user
+                                          .email!, // Pass the post['name'] as an attribute
+                                    )),
+                          );
                           // Handle favorite icon press
                         },
                       ),

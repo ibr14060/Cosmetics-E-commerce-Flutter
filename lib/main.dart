@@ -5,6 +5,7 @@ import 'Pages/Home_Page.dart';
 import 'Pages/ProductPage.dart';
 import 'Pages/Comments.dart';
 import 'Pages/Cart.dart';
+import 'Pages/FavItems.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,6 +48,10 @@ class MyApp extends StatelessWidget {
             ),
         '/Cart': (dummyCtx) => Cart(
               title: 'Product Page',
+              username: '_usernameController',
+            ),
+        '/FavItems': (dummyCtx) => FavItems(
+              title: 'FavItems Page',
               username: '_usernameController',
             )
       },
