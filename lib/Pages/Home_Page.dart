@@ -382,6 +382,17 @@ class HomePageState extends State<HomePage> {
 
   String searchText = '';
   bool isSearchFocused = false;
+  NavigateToFragrances() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => Comments(
+                title: 'Comment Page',
+                postName: post['id'],
+                username: user.email!, // Pass the post['name'] as an attribute
+              )),
+    );
+  }
 
   List<Map<String, dynamic>> buttonData = [
     {
@@ -406,18 +417,10 @@ class HomePageState extends State<HomePage> {
       },
     },
     {
-      'name': 'Eye Products',
+      'name': 'Makeup',
       'icon': Icons.restaurant,
       'onPressed': () {
         print('Restaurant button clicked');
-      },
-    },
-    {
-      'name': 'Perfume',
-      'icon': Icons.beach_access,
-      'onPressed': () {
-        //  navigatetobeach();
-        print('Perfume button clicked');
       },
     },
   ];
