@@ -3,6 +3,7 @@ import 'package:cosmetics_project/Pages/Cart.dart';
 import 'package:cosmetics_project/Pages/Category.dart';
 import 'package:cosmetics_project/Pages/Comments.dart';
 import 'package:cosmetics_project/Pages/FavItems.dart';
+import 'package:cosmetics_project/Pages/GuestCategory.dart';
 import 'package:cosmetics_project/Pages/GuestProductPage.dart';
 import 'package:cosmetics_project/Pages/Login.dart';
 import 'package:cosmetics_project/Pages/ProductPage.dart';
@@ -171,80 +172,40 @@ class GuestHomePageState extends State<GuestHomePage> {
   String searchText = '';
   bool isSearchFocused = false;
 
-  final List<Map<String, dynamic>> buttonData = [
+  List<Map<String, dynamic>> buttonData = [
     {
       'name': 'FRAGRANCES',
       'icon': Icons.spa,
-      'onPressed': (BuildContext context, User? user) {
-        if (user != null) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => CategoryPage(
-                title: 'FRAGRANCES',
-                username: user.email!, // Add a null check here
-                category: 'FRAGRANCES',
-              ),
-            ),
-          );
-        }
-      },
+      'category': 'FRAGRANCES',
     },
     {
       'name': 'HAIR CARE',
       'icon': Icons.spa,
-      'onPressed': (BuildContext context, User? user) {
-        if (user != null) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => CategoryPage(
-                title: 'HAIR CARE',
-                username: user.email!, // Add a null check here
-                category: 'HAIR CARE',
-              ),
-            ),
-          );
-        }
-      },
+      'category': 'HAIR CARE',
     },
     {
       'name': 'Skin Care',
       'icon': Icons.spa,
-      'onPressed': (BuildContext context, User? user) {
-        if (user != null) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => CategoryPage(
-                title: 'Skin Care',
-                username: user.email!, // Add a null check here
-                category: 'Skin Care',
-              ),
-            ),
-          );
-        }
-      },
+      'category': 'Skin Care',
     },
     {
       'name': 'Makeup',
       'icon': Icons.restaurant,
-      'onPressed': (BuildContext context, User? user) {
-        if (user != null) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => CategoryPage(
-                title: 'Makeup',
-                username: user.email!, // Add a null check here
-                category: 'Makeup',
-              ),
-            ),
-          );
-        }
-      },
+      'category': 'Makeup',
     },
   ];
+
+  void navigateToCategoryPage(String category) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => GuestCategoryPage(
+          title: category,
+          category: category,
+        ),
+      ),
+    );
+  }
 
   List<Map<String, dynamic>> SortData = [
     {
@@ -370,7 +331,8 @@ class GuestHomePageState extends State<GuestHomePage> {
                                           : null, // Space between buttons
                                       child: ElevatedButton.icon(
                                         onPressed: () {
-                                          button['onPressed']();
+                                          navigateToCategoryPage(
+                                              button['category']);
                                         },
                                         icon: Icon(button['icon']),
                                         label: Text(button['name']),

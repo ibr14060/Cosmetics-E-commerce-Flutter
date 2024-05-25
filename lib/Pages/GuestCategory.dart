@@ -15,15 +15,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:line_icons/line_icons.dart';
 
 class GuestCategoryPage extends StatefulWidget {
-  GuestCategoryPage(
-      {Key? key,
-      required this.title,
-      required this.username,
-      required this.category})
+  GuestCategoryPage({Key? key, required this.title, required this.category})
       : super(key: key);
   final String category;
   final String title;
-  final String username;
   @override
   State<GuestCategoryPage> createState() => HomePageState();
 }
@@ -395,40 +390,37 @@ class HomePageState extends State<GuestCategoryPage> {
     {
       'name': 'FRAGRANCES',
       'icon': Icons.spa,
-      'onPressed': () {
-        print('Lip button clicked');
-      },
+      'category': 'FRAGRANCES',
     },
     {
       'name': 'HAIR CARE',
       'icon': Icons.spa,
-      'onPressed': () {
-        print('Body Splash button clicked');
-      },
+      'category': 'HAIR CARE',
     },
     {
       'name': 'Skin Care',
       'icon': Icons.spa,
-      'onPressed': () {
-        print('Skin Care button clicked');
-      },
+      'category': 'Skin Care',
     },
     {
-      'name': 'Eye Products',
+      'name': 'Makeup',
       'icon': Icons.restaurant,
-      'onPressed': () {
-        print('Restaurant button clicked');
-      },
-    },
-    {
-      'name': 'Perfume',
-      'icon': Icons.beach_access,
-      'onPressed': () {
-        //  navigatetobeach();
-        print('Perfume button clicked');
-      },
+      'category': 'Makeup',
     },
   ];
+
+  void navigateToCategoryPage(String category) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => GuestCategoryPage(
+          title: category,
+          category: category,
+        ),
+      ),
+    );
+  }
+
   List<Map<String, dynamic>> SortData = [
     {
       'name': 'Time(Latest)',
@@ -581,7 +573,8 @@ class HomePageState extends State<GuestCategoryPage> {
                                           : null, // Space between buttons
                                       child: ElevatedButton.icon(
                                         onPressed: () {
-                                          button['onPressed']();
+                                          navigateToCategoryPage(
+                                              button['category']);
                                         },
                                         icon: Icon(button['icon']),
                                         label: Text(button['name']),
@@ -736,8 +729,7 @@ class HomePageState extends State<GuestCategoryPage> {
                                                                   'Comment Page',
                                                               postName:
                                                                   post['id'],
-                                                              username: user
-                                                                  .email!, // Pass the post['name'] as an attribute
+                                                              // Pass the post['name'] as an attribute
                                                             )),
                                                   );
 

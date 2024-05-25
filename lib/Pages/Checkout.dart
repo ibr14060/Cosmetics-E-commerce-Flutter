@@ -37,6 +37,10 @@ class FavItemsState extends State<Checkout> {
   String experience = '';
   LatLng? selectedLocation;
   int rating = 1;
+  String cardNumber = '';
+  String cardExpiration = '';
+  String cardCVV = '';
+  String address = '';
 
   void initState() {
     super.initState();
@@ -468,38 +472,54 @@ class FavItemsState extends State<Checkout> {
               }).toList(),
             ),
           ),
+          if (selectedPaymentMethod == 'Credit Card' ||
+              selectedPaymentMethod == 'Debit Card')
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextField(
+                    onChanged: (value) {
+                      setState(() {
+                        cardNumber = value;
+                      });
+                    },
+                    decoration: InputDecoration(labelText: 'Card Number'),
+                  ),
+                  TextField(
+                    onChanged: (value) {
+                      setState(() {
+                        cardExpiration = value;
+                      });
+                    },
+                    decoration: InputDecoration(labelText: 'Expiration Date'),
+                  ),
+                  TextField(
+                    onChanged: (value) {
+                      setState(() {
+                        cardCVV = value;
+                      });
+                    },
+                    decoration: InputDecoration(labelText: 'CVV'),
+                  ),
+                ],
+              ),
+            ),
+
+          // Address field
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: Text(
-              'Address',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-          ),
-          SizedBox(height: 8),
-          Container(
-            height: 300, // Adjust height as needed
-            child: GoogleMap(
-              initialCameraPosition: CameraPosition(
-                target: LatLng(0, 0), // Initial position
-                zoom: 15,
-              ),
-              onTap: (LatLng latLng) {
+            child: TextField(
+              onChanged: (value) {
                 setState(() {
-                  selectedLocation =
-                      latLng; // Update selectedLocation when tapped on the map
+                  address = value;
                 });
               },
-              markers: selectedLocation != null
-                  ? Set<Marker>.from([
-                      Marker(
-                        markerId: MarkerId('selectedLocation'),
-                        position: selectedLocation!,
-                      ),
-                    ])
-                  : Set<Marker>(),
+              decoration: InputDecoration(labelText: 'Address'),
             ),
           ),
-          SizedBox(height: 16),
+
           ElevatedButton(onPressed: checkout, child: Text('Checkout')),
           SizedBox(height: 16),
         ],
