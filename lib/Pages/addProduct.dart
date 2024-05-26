@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
 import 'package:uuid/uuid.dart';
 import 'package:cosmetics_project/widgets/genral_tab.dart';
@@ -271,6 +272,7 @@ class _ProductEditFormState extends State<ProductEditForm> {
   late TextEditingController _commentController;
   List<Map<String, dynamic>> comments = [];
   String? selectedCommentId;
+  File? _selectedImage; // Store selected image
 
   @override
   void initState() {
@@ -383,21 +385,42 @@ class _ProductEditFormState extends State<ProductEditForm> {
                   return null;
                 },
               ),
-              DropdownButtonFormField<String>(
-                value: selectedCommentId,
-                items: comments.map((comment) {
-                  return DropdownMenuItem<String>(
-                    value: comment['userId'],
-                    child: Text('${comment['userId']}: ${comment['comment']}'),
-                  );
-                }).toList(),
-                onChanged: (newValue) {
-                  setState(() {
-                    selectedCommentId = newValue;
-                  });
+              TextButton.icon(
+                onPressed: () async {
+                  final image = await ImagePicker()
+                      .pickImage(source: ImageSource.gallery);
+                  if (image != null) {
+                    setState(() {
+                      _selectedImage = File(image.path);
+                    });
+                  }
                 },
-                decoration: InputDecoration(labelText: 'Comments'),
+                icon: Icon(Icons.attach_file),
+                label: Text('Attach Picture'),
               ),
+              _selectedImage != null
+                  ? Image.file(
+                      _selectedImage!,
+                      height: 100,
+                      width: 100,
+                      fit: BoxFit.cover,
+                    )
+                  : DropdownButtonFormField<String>(
+                      value: selectedCommentId,
+                      items: comments.map((comment) {
+                        return DropdownMenuItem<String>(
+                          value: comment['userId'],
+                          child: Text(
+                              '${comment['userId']}: ${comment['comment']}'),
+                        );
+                      }).toList(),
+                      onChanged: (newValue) {
+                        setState(() {
+                          selectedCommentId = newValue;
+                        });
+                      },
+                      decoration: InputDecoration(labelText: 'Comments'),
+                    ),
               SizedBox(height: 8.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
