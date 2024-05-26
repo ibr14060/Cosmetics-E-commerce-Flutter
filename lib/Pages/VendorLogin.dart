@@ -29,6 +29,7 @@ class _VendorLoginScreenState extends State<VendorLoginScreenApp> {
   TextEditingController _lastNameController = TextEditingController();
   TextEditingController _mobileController = TextEditingController();
   TextEditingController _addressController = TextEditingController();
+  TextEditingController _VendorName = TextEditingController();
 
   Future<bool> signInWithEmailAndPassword() async {
     try {
@@ -54,15 +55,14 @@ class _VendorLoginScreenState extends State<VendorLoginScreenApp> {
     }
   }
 
-  Future<bool> createUserWithEmailAndPassword() async {
+  Future<bool> createVendorWithEmailAndPassword() async {
     try {
-      await Auth().createUserWithEmailAndPassword(
+      await Auth().createVendorWithEmailAndPassword(
         email: _usernameController.text,
         password: _passwordController.text,
         mobileNumber: _mobileController.text,
         address: _addressController.text,
-        firstName: _firstNameController.text,
-        lastName: _lastNameController.text,
+        vendorname: _VendorName.text,
         role: "Vendor",
       );
       return true;
@@ -90,7 +90,7 @@ class _VendorLoginScreenState extends State<VendorLoginScreenApp> {
     if (isLogin) {
       isSuccess = await signInWithEmailAndPassword();
     } else {
-      isSuccess = await createUserWithEmailAndPassword();
+      isSuccess = await createVendorWithEmailAndPassword();
     }
 
     if (isSuccess) {
@@ -130,6 +130,7 @@ class _VendorLoginScreenState extends State<VendorLoginScreenApp> {
     _lastNameController.dispose();
     _mobileController.dispose();
     _addressController.dispose();
+    _VendorName.dispose();
     super.dispose();
   }
 
@@ -143,7 +144,7 @@ class _VendorLoginScreenState extends State<VendorLoginScreenApp> {
           children: [
             if (!isLogin) ...[
               TextField(
-                controller: _passwordController,
+                controller: _VendorName,
                 decoration: InputDecoration(
                   labelText: 'Vendor Name',
                   border: OutlineInputBorder(),

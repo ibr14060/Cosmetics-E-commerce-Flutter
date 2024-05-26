@@ -103,6 +103,81 @@ class Auth {
     }
   }
 
+  Future<User?> createVendorWithEmailAndPassword({
+    required String email,
+    required String password,
+    required String mobileNumber,
+    required String address,
+    required String vendorname,
+    required String role,
+  }) async {
+    try {
+      UserCredential userCredential =
+          await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      User? user = userCredential.user;
+      if (user != null) {
+        final response = await http.post(
+          Uri.parse(
+              'https://mobileproject12-d6fad-default-rtdb.firebaseio.com/Users.json'),
+          body: json.encode({
+            'email': email,
+            'mobileNumber': mobileNumber,
+            'address': address,
+            'vendorname': vendorname,
+          }),
+        );
+        if (response.statusCode == 200) {
+          final Cartresponse = await http.post(
+            Uri.parse(
+                'https://mobileproject12-d6fad-default-rtdb.firebaseio.com/Cart.json'),
+            body: json.encode({
+              'email': email,
+              'Products': "",
+            }),
+          );
+          final Favresponse = await http.post(
+            Uri.parse(
+                'https://mobileproject12-d6fad-default-rtdb.firebaseio.com/FavItems.json'),
+            body: json.encode({
+              'email': email,
+              'Products': "",
+            }),
+          );
+          final Orderresponse = await http.post(
+            Uri.parse(
+                'https://mobileproject12-d6fad-default-rtdb.firebaseio.com/Orders.json'),
+            body: json.encode({
+              'email': email,
+              'Products': "",
+            }),
+          );
+          if (Cartresponse.statusCode == 200 &&
+              Favresponse.statusCode == 200 &&
+              Orderresponse.statusCode == 200) {
+            print('User data added to database');
+            _storeAuthState(true); // Store authentication state
+          } else {
+            print('Error adding user data to database');
+          }
+        }
+      }
+      return user;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        print('The password provided is too weak.');
+      } else if (e.code == 'email-already-in-use') {
+        print('The account already exists for that email.');
+      }
+      return null;
+    } catch (e) {
+      print('An error occurred: $e');
+      return null;
+    }
+  }
+
   void _storeAuthState(bool isLoggedIn) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool('isLoggedIn', isLoggedIn);
