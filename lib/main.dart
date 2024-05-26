@@ -3,7 +3,9 @@ import 'package:cosmetics_project/Pages/Category.dart';
 import 'package:cosmetics_project/Pages/Guest.dart';
 import 'package:cosmetics_project/Pages/GuestCategory.dart';
 import 'package:cosmetics_project/Pages/GuestComments.dart';
+import 'package:cosmetics_project/Pages/Vendor.dart';
 import 'package:cosmetics_project/Pages/VendorLogin.dart';
+import 'package:cosmetics_project/Pages/addProduct.dart';
 import 'package:cosmetics_project/Pages/main_screen.dart';
 import 'package:cosmetics_project/Pages/on_boarding_screen.dart';
 import 'package:flutter/material.dart';
@@ -120,6 +122,11 @@ class MyApp extends StatelessWidget {
               title: 'Home Page',
               postName: 'post1',
             ),
+        '/Vendor': (context) => Vendor(
+              title: 'Vendor Page',
+              username: '_usernameController',
+            ),
+        '/addproduct': (context) => AddProductScreen(),
       },
     );
   }

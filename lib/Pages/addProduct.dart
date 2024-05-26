@@ -374,18 +374,8 @@ class _ProductEditFormState extends State<ProductEditForm> {
                 },
               ),
               TextFormField(
-                controller: _codeController,
-                decoration: InputDecoration(labelText: 'Code'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a code';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
                 controller: _vendorIdController,
-                decoration: InputDecoration(labelText: 'Vendor ID'),
+                decoration: InputDecoration(labelText: 'Vendor Name'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter a vendor ID';

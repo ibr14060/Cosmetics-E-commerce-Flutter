@@ -94,7 +94,7 @@ class _VendorLoginScreenState extends State<VendorLoginScreenApp> {
     }
 
     if (isSuccess) {
-      Navigator.pushReplacementNamed(context, '/HomePage');
+      Navigator.pushReplacementNamed(context, '/Vendor');
     } else {
       showDialog(
         context: context,
@@ -149,7 +149,6 @@ class _VendorLoginScreenState extends State<VendorLoginScreenApp> {
                   labelText: 'Vendor Name',
                   border: OutlineInputBorder(),
                 ),
-                obscureText: true,
               ),
               SizedBox(height: 16.0),
               TextField(
