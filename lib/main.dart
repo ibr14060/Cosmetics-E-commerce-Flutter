@@ -3,6 +3,7 @@ import 'package:cosmetics_project/Pages/Category.dart';
 import 'package:cosmetics_project/Pages/Guest.dart';
 import 'package:cosmetics_project/Pages/GuestCategory.dart';
 import 'package:cosmetics_project/Pages/GuestComments.dart';
+import 'package:cosmetics_project/Pages/PostPage.dart';
 import 'package:cosmetics_project/Pages/Vendor.dart';
 import 'package:cosmetics_project/Pages/VendorLogin.dart';
 import 'package:cosmetics_project/Pages/addProduct.dart';
@@ -130,6 +131,9 @@ class MyApp extends StatelessWidget {
         '/addproduct': (context) => AddProductScreen(),
         '/Order': (context) => Order(
               title: 'Product Page',
+              username: '_usernameController',
+            ),
+        '/postpage': (context) => PostPage(
               username: '_usernameController',
             ),
       },

@@ -1,55 +1,52 @@
 import 'dart:io';
 
+import 'package:cosmetics_project/widgets/genral_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
 import 'package:uuid/uuid.dart';
 import 'package:cosmetics_project/widgets/genral_tab.dart';
 
 class AddProductScreen extends StatefulWidget {
   @override
-  _AddProductScreenState createState() => _AddProductScreenState();
-}
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    throw UnimplementedError();
+  }
 
-class _AddProductScreenState extends State<AddProductScreen> {
   final String databaseUrl =
       'https://mobileproject12-d6fad-default-rtdb.firebaseio.com/Products';
-  File? _selectedImage;
 
-  Future<void> _pickImage(ImageSource source) async {
-    final pickedImage = await ImagePicker().pickImage(source: source);
-    setState(() {
-      if (pickedImage != null) {
-        _selectedImage = File(pickedImage.path);
-      }
-    });
-  }
-
-  void _removeImage() {
-    setState(() {
-      _selectedImage = null;
-    });
-  }
-
-  String? imageToBase64(File? image) {
-    if (image == null) return null;
-    final bytes = image.readAsBytesSync();
-    return base64Encode(bytes);
+  void showDialogMessage(BuildContext context, String title, String message) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(title),
+        content: Text(message),
+        actions: [
+          TextButton(
+            child: Text('OK'),
+            onPressed: () {
+              Navigator.of(ctx).pop();
+            },
+          ),
+        ],
+      ),
+    );
   }
 
   void addProductToDatabase({
+    required BuildContext context,
     required String productName,
     required String productDescription,
     required String productType,
     required double price,
     required String code,
     required String vendorId,
-    required List<Map<String, dynamic>> comments, // Made comments required
-    File? image,
+    required List<Map<String, dynamic>> comments,
+    File? imageFile, // Add imageFile parameter
   }) async {
     try {
-      final String? imageBase64 = imageToBase64(image);
       final productId = Uuid().v4();
 
       final response = await http.post(
@@ -60,20 +57,22 @@ class _AddProductScreenState extends State<AddProductScreen> {
           'ProductDescription': productDescription,
           'ProductCategory': productType,
           'ProductPrice': price,
-          'ProductVendor': vendorId,
+          'code': code,
+          'VendorName': vendorId,
           'ProductComments': comments,
-          'ProductImage': imageBase64,
-          'ProductRating': 0,
         }),
       );
 
       if (response.statusCode == 200) {
-        print('Product added to database');
+        showDialogMessage(
+            context, 'Success', 'The product has been added successfully.');
       } else {
-        print('Error adding product to database: ${response.statusCode}');
+        showDialogMessage(context, 'Error',
+            'Error adding product Please Try again: ${response.statusCode}');
       }
     } catch (error) {
-      print('Error adding product to database: $error');
+      showDialogMessage(
+          context, 'Error', 'Error adding product Please Try again: $error');
     }
   }
 
@@ -94,7 +93,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 color: Colors.pink,
               ),
             ),
-            tabs: const [
+            tabs: [
               Tab(
                 child: Text('Add Product'),
               ),
@@ -108,26 +107,31 @@ class _AddProductScreenState extends State<AddProductScreen> {
           child: TabBarView(
             children: [
               GeneralTab(
-                onDataSaved: addProductToDatabase,
-                //  onImagePicked: _pickImage,
-//onImageRemoved: _removeImage,
-//selectedImage:
+                onDataSaved: ({
+                  required String productName,
+                  required String productDescription,
+                  required String productType,
+                  required double price,
+                  required String code,
+                  required String vendorId,
+                  required List<Map<String, dynamic>> comments,
+                }) {
+                  addProductToDatabase(
+                    context: context,
+                    productName: productName,
+                    productDescription: productDescription,
+                    productType: productType,
+                    price: price,
+                    code: code,
+                    vendorId: vendorId,
+                    comments: comments,
+                  );
+                },
               ),
               UpdateProductTab(databaseUrl: '$databaseUrl.json'),
             ],
           ),
         ),
-        persistentFooterButtons: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton(
-              onPressed: () {
-                // Functionality to save product could be added here.
-              },
-              child: Text('Save Product'),
-            ),
-          )
-        ],
       ),
     );
   }
@@ -145,7 +149,7 @@ class UpdateProductTab extends StatefulWidget {
 
 class _UpdateProductTabState extends State<UpdateProductTab> {
   List<Map<String, dynamic>> products = [];
-  File? _selectedImage;
+
   @override
   void initState() {
     super.initState();
@@ -176,49 +180,28 @@ class _UpdateProductTabState extends State<UpdateProductTab> {
     }
   }
 
-  Future<void> _pickImage(ImageSource source) async {
-    final pickedImage = await ImagePicker().pickImage(source: source);
-    setState(() {
-      if (pickedImage != null) {
-        _selectedImage = File(pickedImage.path);
-      }
-    });
-  }
-
-  void _removeImage() {
-    setState(() {
-      _selectedImage = null;
-    });
-  }
-
-  String? imageToBase64(File? image) {
-    if (image == null) return null;
-    final bytes = image.readAsBytesSync();
-    return base64Encode(bytes);
-  }
-
   Future<void> updateProduct({
+    required BuildContext context,
+    required String id,
     required String productName,
     required String productDescription,
     required String productType,
     required double price,
     required String code,
     required String vendorId,
-    required List<Map<String, dynamic>> comments, // Made comments required
-    File? image,
-    required String id,
+    required List<Map<String, dynamic>> comments,
   }) async {
     try {
       final Map<String, dynamic> productData = {
-        'ProductName': productName,
-        'ProductDescription': productDescription,
-        'ProductCategory': productType,
-        'ProductPrice': price,
-        'ProductVendor': vendorId,
-        'ProductComments': comments,
-        'ProductImage': image,
+        'productName': productName,
+        'productDescription': productDescription,
+        'productType': productType,
+        'price': price,
+        'code': code,
+        'vendorId': vendorId,
+        'comments': comments,
       };
-      print("aa");
+
       final String baseUrl =
           'https://mobileproject12-d6fad-default-rtdb.firebaseio.com/Products/$id.json';
       final Uri url = Uri.parse(baseUrl);
@@ -229,35 +212,82 @@ class _UpdateProductTabState extends State<UpdateProductTab> {
       );
 
       if (response.statusCode == 200) {
-        print('Product updated in database');
+        showDialogMessage(
+            context, 'Success', 'Product has been saved successfully ');
         fetchProducts();
       } else {
-        print('Error updating product in database: ${response.statusCode}');
-        print('Response body: ${response.body}');
+        showDialogMessage(context, 'Error',
+            'Error updating product , Please Try again: ${response.statusCode}');
       }
     } catch (error) {
-      print('Error updating product in database: $error');
+      showDialogMessage(context, 'Error',
+          'Error updating product , Please Try again: $error');
     }
   }
 
-  Future<void> deleteProduct(String id) async {
+  Future<void> deleteProduct(BuildContext context, String id) async {
+    bool confirmDelete = await showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text('Confirm Delete'),
+            content: Text('Are you sure you want to delete this product?'),
+            actions: [
+              TextButton(
+                child: Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(ctx).pop(false);
+                },
+              ),
+              TextButton(
+                child: Text('Delete'),
+                onPressed: () {
+                  Navigator.of(ctx).pop(true);
+                },
+              ),
+            ],
+          ),
+        ) ??
+        false;
+
+    if (!confirmDelete) return;
+
     try {
       final String baseUrl =
-          'https://mobileproject12-d6fad-default-rtdb.firebaseio.com/products/$id.json';
+          'https://mobileproject12-d6fad-default-rtdb.firebaseio.com/Products/$id.json';
       final Uri url = Uri.parse(baseUrl);
 
       final response = await http.delete(url);
 
       if (response.statusCode == 200) {
-        print('Product deleted from database');
+        showDialogMessage(
+            context, 'Success', 'Product has been deleted successfully');
         fetchProducts();
       } else {
-        print('Error deleting product from database: ${response.statusCode}');
-        print('Response body: ${response.body}');
+        showDialogMessage(context, 'Error',
+            'Error deleting product , Please Try again: ${response.statusCode}');
       }
     } catch (error) {
-      print('Error deleting product from database: $error');
+      showDialogMessage(context, 'Error',
+          'Error deleting product , Please Try again: $error');
     }
+  }
+
+  void showDialogMessage(BuildContext context, String title, String message) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(title),
+        content: Text(message),
+        actions: [
+          TextButton(
+            child: Text('OK'),
+            onPressed: () {
+              Navigator.of(ctx).pop();
+            },
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -271,6 +301,7 @@ class _UpdateProductTabState extends State<UpdateProductTab> {
           onSave: (id, productName, productDescription, productType, price,
               code, vendorId, comments) {
             updateProduct(
+              context: context,
               id: id,
               productName: productName,
               productDescription: productDescription,
@@ -281,7 +312,9 @@ class _UpdateProductTabState extends State<UpdateProductTab> {
               comments: comments,
             );
           },
-          onDelete: deleteProduct,
+          onDelete: (id) {
+            deleteProduct(context, id);
+          },
         );
       },
     );
@@ -324,7 +357,6 @@ class _ProductEditFormState extends State<ProductEditForm> {
   late TextEditingController _commentController;
   List<Map<String, dynamic>> comments = [];
   String? selectedCommentId;
-  File? _selectedImage; // Store selected image
 
   @override
   void initState() {
@@ -338,7 +370,6 @@ class _ProductEditFormState extends State<ProductEditForm> {
     _priceController =
         TextEditingController(text: widget.product['price'].toString());
     _codeController = TextEditingController(text: widget.product['code']);
-
     _vendorIdController =
         TextEditingController(text: widget.product['vendorId']);
     _commentController = TextEditingController();
@@ -429,8 +460,18 @@ class _ProductEditFormState extends State<ProductEditForm> {
                 },
               ),
               TextFormField(
+                controller: _codeController,
+                decoration: InputDecoration(labelText: 'Code'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a code';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
                 controller: _vendorIdController,
-                decoration: InputDecoration(labelText: 'Vendor Name'),
+                decoration: InputDecoration(labelText: 'Vendor ID'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter a vendor ID';
@@ -438,42 +479,21 @@ class _ProductEditFormState extends State<ProductEditForm> {
                   return null;
                 },
               ),
-              TextButton.icon(
-                onPressed: () async {
-                  final image = await ImagePicker()
-                      .pickImage(source: ImageSource.gallery);
-                  if (image != null) {
-                    setState(() {
-                      _selectedImage = File(image.path);
-                    });
-                  }
+              DropdownButtonFormField<String>(
+                value: selectedCommentId,
+                items: comments.map((comment) {
+                  return DropdownMenuItem<String>(
+                    value: comment['userId'],
+                    child: Text('${comment['userId']}: ${comment['comment']}'),
+                  );
+                }).toList(),
+                onChanged: (newValue) {
+                  setState(() {
+                    selectedCommentId = newValue;
+                  });
                 },
-                icon: Icon(Icons.attach_file),
-                label: Text('Attach Picture'),
+                decoration: InputDecoration(labelText: 'Comments'),
               ),
-              _selectedImage != null
-                  ? Image.file(
-                      _selectedImage!,
-                      height: 100,
-                      width: 100,
-                      fit: BoxFit.cover,
-                    )
-                  : DropdownButtonFormField<String>(
-                      value: selectedCommentId,
-                      items: comments.map((comment) {
-                        return DropdownMenuItem<String>(
-                          value: comment['userId'],
-                          child: Text(
-                              '${comment['userId']}: ${comment['comment']}'),
-                        );
-                      }).toList(),
-                      onChanged: (newValue) {
-                        setState(() {
-                          selectedCommentId = newValue;
-                        });
-                      },
-                      decoration: InputDecoration(labelText: 'Comments'),
-                    ),
               SizedBox(height: 8.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -532,7 +532,7 @@ class HomePageState extends State<Vendor> {
                 ),
                 floatingActionButton: FloatingActionButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, '/addproduct');
+                    Navigator.pushNamed(context, '/postpage');
                   },
                   child: Icon(Icons.add),
                 ),
@@ -555,13 +555,6 @@ class HomePageState extends State<Vendor> {
                         icon: Icon(Icons.list),
                         onPressed: () {
                           // Handle orders icon press
-                        },
-                      ),
-                      SizedBox(width: 40.0), // Space for the FAB
-                      IconButton(
-                        icon: Icon(Icons.favorite),
-                        onPressed: () {
-                          // Handle favorite icon press
                         },
                       ),
                       IconButton(
