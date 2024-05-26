@@ -165,7 +165,7 @@ class _UpdateProductTabState extends State<UpdateProductTab> {
         'ProductComments': comments,
         'ProductImage': image,
       };
-
+      print("aa");
       final String baseUrl =
           'https://mobileproject12-d6fad-default-rtdb.firebaseio.com/Products/$id.json';
       final Uri url = Uri.parse(baseUrl);
