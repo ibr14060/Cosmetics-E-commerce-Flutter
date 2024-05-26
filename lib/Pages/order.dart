@@ -85,55 +85,35 @@ class CartState extends State<Order> {
         final Map<String, dynamic>? ordersData = json.decode(response.body);
 
         if (ordersData != null) {
-          for (String orderId in ordersData.keys) {
-            final orderInfo = ordersData[orderId];
-
-            if (orderInfo['email'] == user.email) {
-              // Extract order details
-              final address = orderInfo['address'];
-              final paymentMethod = orderInfo['paymentMethod'];
-              print(address);
-              // Fetch products associated with this order
-              final Map<String, dynamic>? products = orderInfo['Products'];
+          ordersData.forEach((orderId, order) {
+            if (order['email'] == user.email) {
+              final address = order['address'];
+              final paymentMethod = order['paymentMethod'];
+              final List<dynamic>? products = order['products'];
               if (products != null) {
-                for (String productId in products.keys) {
-                  final productResponse = await http.get(Uri.parse(
-                    'https://mobileproject12-d6fad-default-rtdb.firebaseio.com/Products/$productId.json',
-                  ));
+                for (var product in products) {
+                  final Map<String, dynamic> productData = {
+                    'id': product['id'],
+                    'ProductImage': product['ProductImage'],
+                    'ProductName': product['ProductName'],
+                    'ProductPrice': product['ProductPrice'],
+                    'ProductVendor': product['ProductVendor'],
+                    'ProductRating': product['ProductRating'],
+                    'ProductDescription': product['ProductDescription'],
+                    'ProductCategory': product['ProductCategory'],
+                    'quantity': product['quantity'],
+                    'address': address,
+                    'paymentMethod': paymentMethod,
+                  };
 
-                  if (productResponse.statusCode == 200) {
-                    final Map<String, dynamic>? productJson =
-                        json.decode(productResponse.body);
-
-                    if (productJson != null) {
-                      final Map<String, dynamic> product = {
-                        'id': productId,
-                        'ProductImage': productJson['ProductImage'],
-                        'ProductName': productJson['ProductName'],
-                        'ProductPrice': productJson['ProductPrice'],
-                        'ProductVendor': productJson['ProductVendor'],
-                        'ProductRating': productJson['ProductRating'],
-                        'ProductDescription': productJson['ProductDescription'],
-                        'ProductCategory': productJson['ProductCategory'],
-                        'quantity': products[productId]['quantity'],
-                        'address': address,
-                        'paymentMethod': paymentMethod,
-                      };
-
-                      setState(() {
-                        CartData.add(product);
-                        print(CartData);
-                      });
-                    }
-                  } else {
-                    print(
-                      'Failed to fetch product with ID $productId: ${productResponse.statusCode}',
-                    );
-                  }
+                  setState(() {
+                    CartData.add(productData);
+                    print(CartData);
+                  });
                 }
               }
             }
-          }
+          });
         } else {
           print('No orders found for the user.');
         }
@@ -346,8 +326,6 @@ class CartState extends State<Order> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
           ),
-          SizedBox(height: 16),
-          ElevatedButton(onPressed: checkout, child: Text('Checkout')),
           SizedBox(height: 16),
         ],
       ),
