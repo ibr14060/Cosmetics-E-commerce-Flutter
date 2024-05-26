@@ -7,9 +7,36 @@ import 'dart:convert';
 import 'package:uuid/uuid.dart';
 import 'package:cosmetics_project/widgets/genral_tab.dart';
 
-class AddProductScreen extends StatelessWidget {
+class AddProductScreen extends StatefulWidget {
+  @override
+  _AddProductScreenState createState() => _AddProductScreenState();
+}
+
+class _AddProductScreenState extends State<AddProductScreen> {
   final String databaseUrl =
       'https://mobileproject12-d6fad-default-rtdb.firebaseio.com/Products';
+  File? _selectedImage;
+
+  Future<void> _pickImage(ImageSource source) async {
+    final pickedImage = await ImagePicker().pickImage(source: source);
+    setState(() {
+      if (pickedImage != null) {
+        _selectedImage = File(pickedImage.path);
+      }
+    });
+  }
+
+  void _removeImage() {
+    setState(() {
+      _selectedImage = null;
+    });
+  }
+
+  String? imageToBase64(File? image) {
+    if (image == null) return null;
+    final bytes = image.readAsBytesSync();
+    return base64Encode(bytes);
+  }
 
   void addProductToDatabase({
     required String productName,
@@ -22,6 +49,7 @@ class AddProductScreen extends StatelessWidget {
     File? image,
   }) async {
     try {
+      final String? imageBase64 = imageToBase64(image);
       final productId = Uuid().v4();
 
       final response = await http.post(
@@ -34,7 +62,7 @@ class AddProductScreen extends StatelessWidget {
           'ProductPrice': price,
           'ProductVendor': vendorId,
           'ProductComments': comments,
-          'ProductImage': image,
+          'ProductImage': imageBase64,
           'ProductRating': 0,
         }),
       );
@@ -81,6 +109,9 @@ class AddProductScreen extends StatelessWidget {
             children: [
               GeneralTab(
                 onDataSaved: addProductToDatabase,
+                //  onImagePicked: _pickImage,
+//onImageRemoved: _removeImage,
+//selectedImage:
               ),
               UpdateProductTab(databaseUrl: '$databaseUrl.json'),
             ],
@@ -114,7 +145,7 @@ class UpdateProductTab extends StatefulWidget {
 
 class _UpdateProductTabState extends State<UpdateProductTab> {
   List<Map<String, dynamic>> products = [];
-
+  File? _selectedImage;
   @override
   void initState() {
     super.initState();
@@ -143,6 +174,27 @@ class _UpdateProductTabState extends State<UpdateProductTab> {
     } catch (error) {
       print('Failed to fetch products: $error');
     }
+  }
+
+  Future<void> _pickImage(ImageSource source) async {
+    final pickedImage = await ImagePicker().pickImage(source: source);
+    setState(() {
+      if (pickedImage != null) {
+        _selectedImage = File(pickedImage.path);
+      }
+    });
+  }
+
+  void _removeImage() {
+    setState(() {
+      _selectedImage = null;
+    });
+  }
+
+  String? imageToBase64(File? image) {
+    if (image == null) return null;
+    final bytes = image.readAsBytesSync();
+    return base64Encode(bytes);
   }
 
   Future<void> updateProduct({
@@ -286,6 +338,7 @@ class _ProductEditFormState extends State<ProductEditForm> {
     _priceController =
         TextEditingController(text: widget.product['price'].toString());
     _codeController = TextEditingController(text: widget.product['code']);
+
     _vendorIdController =
         TextEditingController(text: widget.product['vendorId']);
     _commentController = TextEditingController();

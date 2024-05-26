@@ -47,7 +47,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               OnBoardPage(
                 boardImage: Image(
                   image: NetworkImage(
-                      'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRdWYxtPEVZaJyCmgfBBGkl8WnHqR3nC_I5RnW76lbamDYprXxO'),
+                      'https://www.byrdie.com/thmb/Qi-SWEO79P6vKqZp_ZSZMhHySjA=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/BYR-GROUPSHOT_JessicaJuliao-0282.jpg-88161a03826f40d9aaa96286e724ddb0.jpg'),
                   fit: BoxFit.cover, // Adjust the fit property
                   width: MediaQuery.of(context).size.width,
                 ),
@@ -57,7 +57,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               OnBoardPage(
                 boardImage: Image(
                   image: NetworkImage(
-                      'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRdWYxtPEVZaJyCmgfBBGkl8WnHqR3nC_I5RnW76lbamDYprXxO'),
+                      'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi99aQOWT6L_5TQPyzB-v_KgmNIRoILOzNZfdnQnGniwGflHmohec4MJG9Ce3Qev2W9KQgIiD2AwY20gFE_VwStmr0RYw4om4UWRy33mttCSfyONbwvkt3qiTh59nDN6EStteCg4xX9WMQx00Zu44pfpqGDpEqysijMR_LjRAN5kynTJyqfbKrLjG5B4A/s640/Nakeup%20Face%20Water%20Barbie%20Set%20(1).jpeg'),
                   fit: BoxFit.cover, // Adjust the fit property
                   width: MediaQuery.of(context).size.width,
                 ),
@@ -65,28 +65,23 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                     'Welcome to beauty store where you can find latest makeup products',
               ),
               OnBoardPage(
-                boardImage: Image.asset(
-                  'images/1.jpeg',
+                boardImage: Image(
+                  image: NetworkImage(
+                      'https://static01.nyt.com/images/2018/12/20/t-magazine/fashion/20tmag-fragrance/20tmag-fragrance-superJumbo.jpg'),
+
                   fit: BoxFit.cover, // Adjust the fit property
                   width: MediaQuery.of(context).size.width,
                 ),
                 boardText: 'NEEDED SUPPLEMENTS AND VITAMINS',
               ),
               OnBoardPage(
-                boardImage: Image.asset(
-                  'images/3.jpeg',
+                boardImage: Image(
+                  image: NetworkImage(
+                      'https://img.fruugo.com/product/9/07/297418079_max.jpg'),
                   fit: BoxFit.cover, // Adjust the fit property
                   width: MediaQuery.of(context).size.width,
                 ),
                 boardText: 'SKIN CARE PRODUCTS',
-              ),
-              OnBoardPage(
-                boardImage: Image.asset(
-                  'images/5.webp',
-                  fit: BoxFit.cover, // Adjust the fit property
-                  width: MediaQuery.of(context).size.width,
-                ),
-                boardText: 'YOUR FAVS PERFUMES',
               ),
             ],
           ),

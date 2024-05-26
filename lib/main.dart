@@ -8,6 +8,7 @@ import 'package:cosmetics_project/Pages/VendorLogin.dart';
 import 'package:cosmetics_project/Pages/addProduct.dart';
 import 'package:cosmetics_project/Pages/main_screen.dart';
 import 'package:cosmetics_project/Pages/on_boarding_screen.dart';
+import 'package:cosmetics_project/Pages/order.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -127,6 +128,10 @@ class MyApp extends StatelessWidget {
               username: '_usernameController',
             ),
         '/addproduct': (context) => AddProductScreen(),
+        '/Order': (context) => Order(
+              title: 'Product Page',
+              username: '_usernameController',
+            ),
       },
     );
   }

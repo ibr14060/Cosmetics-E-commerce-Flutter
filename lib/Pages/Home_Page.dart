@@ -4,6 +4,7 @@ import 'package:cosmetics_project/Pages/Category.dart';
 import 'package:cosmetics_project/Pages/Comments.dart';
 import 'package:cosmetics_project/Pages/FavItems.dart';
 import 'package:cosmetics_project/Pages/ProductPage.dart';
+import 'package:cosmetics_project/Pages/order.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter/material.dart';
@@ -853,9 +854,17 @@ class HomePageState extends State<HomePage> {
                         },
                       ),
                       IconButton(
-                        icon: Icon(Icons.list),
+                        icon: Icon(Icons.book),
                         onPressed: () {
-                          // Handle orders icon press
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Order(
+                                      title: 'Your Orders ',
+                                      username: user
+                                          .email!, // Pass the post['name'] as an attribute
+                                    )),
+                          );
                         },
                       ),
                       SizedBox(width: 40.0), // Space for the FAB
