@@ -375,6 +375,7 @@ class FavItemsState extends State<Checkout> {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color(0xFFEDE8E8),
         title: Text(widget.title),
       ),
       backgroundColor: Color(0xFFFFCCC1), // Set background color here

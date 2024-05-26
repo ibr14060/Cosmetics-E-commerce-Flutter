@@ -33,6 +33,7 @@ class Auth {
     required String address,
     required String firstName,
     required String lastName,
+    required String role,
   }) async {
     try {
       UserCredential userCredential =

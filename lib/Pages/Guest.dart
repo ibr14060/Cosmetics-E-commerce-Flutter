@@ -7,6 +7,7 @@ import 'package:cosmetics_project/Pages/GuestCategory.dart';
 import 'package:cosmetics_project/Pages/GuestProductPage.dart';
 import 'package:cosmetics_project/Pages/Login.dart';
 import 'package:cosmetics_project/Pages/ProductPage.dart';
+import 'package:cosmetics_project/Pages/VendorLogin.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter/material.dart';
@@ -232,6 +233,34 @@ class GuestHomePageState extends State<GuestHomePage> {
       },
     }
   ];
+
+  void showLoginOptions(BuildContext context) {
+    final List<String> options = ['Login as Customer', 'Login as Vendor'];
+    showMenu(
+      context: context,
+      position: RelativeRect.fromLTRB(100, 100, 0, 0),
+      items: options.map((String option) {
+        return PopupMenuItem<String>(
+          value: option,
+          child: Text(option),
+        );
+      }).toList(),
+    ).then((selectedOption) {
+      if (selectedOption != null) {
+        if (selectedOption == 'Login as Customer') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => LoginScreen()),
+          );
+        } else if (selectedOption == 'Login as Vendor') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => VendorLoginScreen()),
+          );
+        }
+      }
+    });
+  }
 
   Widget build(BuildContext context) {
     return FutureBuilder<User?>(
@@ -508,12 +537,7 @@ class GuestHomePageState extends State<GuestHomePage> {
                       IconButton(
                         icon: Icon(Icons.person),
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => LoginScreen()),
-                          );
-                          // Handle user profile icon press
+                          showLoginOptions(context);
                         },
                       ),
                     ],

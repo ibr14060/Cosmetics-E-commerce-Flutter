@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cosmetics_project/auth.dart';
 
-class LoginScreen extends StatelessWidget {
+class VendorLoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -10,17 +10,17 @@ class LoginScreen extends StatelessWidget {
         title: Text('Login Page'),
         backgroundColor: Color(0xFFEDE8E8),
       ),
-      body: LoginScreenApp(),
+      body: VendorLoginScreenApp(), // Use VendorLoginScreenApp here
     );
   }
 }
 
-class LoginScreenApp extends StatefulWidget {
+class VendorLoginScreenApp extends StatefulWidget {
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  _VendorLoginScreenState createState() => _VendorLoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreenApp> {
+class _VendorLoginScreenState extends State<VendorLoginScreenApp> {
   String? error = '';
   bool isLogin = true;
   TextEditingController _usernameController = TextEditingController();
@@ -57,13 +57,14 @@ class _LoginScreenState extends State<LoginScreenApp> {
   Future<bool> createUserWithEmailAndPassword() async {
     try {
       await Auth().createUserWithEmailAndPassword(
-          email: _usernameController.text,
-          password: _passwordController.text,
-          mobileNumber: _mobileController.text,
-          address: _addressController.text,
-          firstName: _firstNameController.text,
-          lastName: _lastNameController.text,
-          role: "Customer");
+        email: _usernameController.text,
+        password: _passwordController.text,
+        mobileNumber: _mobileController.text,
+        address: _addressController.text,
+        firstName: _firstNameController.text,
+        lastName: _lastNameController.text,
+        role: "Vendor",
+      );
       return true;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
@@ -142,19 +143,12 @@ class _LoginScreenState extends State<LoginScreenApp> {
           children: [
             if (!isLogin) ...[
               TextField(
-                controller: _firstNameController,
+                controller: _passwordController,
                 decoration: InputDecoration(
-                  labelText: 'First Name',
+                  labelText: 'Vendor Name',
                   border: OutlineInputBorder(),
                 ),
-              ),
-              SizedBox(height: 16.0),
-              TextField(
-                controller: _lastNameController,
-                decoration: InputDecoration(
-                  labelText: 'Last Name',
-                  border: OutlineInputBorder(),
-                ),
+                obscureText: true,
               ),
               SizedBox(height: 16.0),
               TextField(
@@ -194,12 +188,6 @@ class _LoginScreenState extends State<LoginScreenApp> {
             ElevatedButton(
               onPressed: _loginOrSignup,
               child: Text(isLogin ? 'Login' : 'Sign Up'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pushReplacementNamed(context, '/GuestHomePage');
-              },
-              child: Text('Continue as Guest User'),
             ),
             TextButton(
               onPressed: toggleFormMode,

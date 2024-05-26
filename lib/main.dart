@@ -3,6 +3,7 @@ import 'package:cosmetics_project/Pages/Category.dart';
 import 'package:cosmetics_project/Pages/Guest.dart';
 import 'package:cosmetics_project/Pages/GuestCategory.dart';
 import 'package:cosmetics_project/Pages/GuestComments.dart';
+import 'package:cosmetics_project/Pages/VendorLogin.dart';
 import 'package:cosmetics_project/Pages/main_screen.dart';
 import 'package:cosmetics_project/Pages/on_boarding_screen.dart';
 import 'package:flutter/material.dart';
@@ -76,6 +77,7 @@ class MyApp extends StatelessWidget {
         OnBoardingScreen.id: (context) => const OnBoardingScreen(),
         MainScreen.id: (context) => const MainScreen(),
         '/LoginScreen': (context) => LoginScreen(),
+        '/VendorLoginScreen': (context) => VendorLoginScreen(),
         '/HomePage': (context) => HomePage(
               title: 'Home Page',
               username: '_usernameController',
